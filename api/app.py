@@ -133,7 +133,7 @@ def _scene_path():
 @app.get("/api/options")
 def options():
     return {
-        "routing": ["Greedy", "DSDV", "GRAD", "OPAR", "QRouting", "QFANET", "QGeo", "QMR", "Baseline_DRL"],
+        "routing": ["Greedy", "DSDV", "GRAD", "OPAR", "QRouting", "QFANET", "QGeo", "QMR", "Baseline_DRL", "RLFR"],
         "routing_parameters": ROUTING_PARAMETER_DEFINITIONS,
         "mac": ["CSMA_CA", "Pure_Aloha", "TDMA"],
         "mobility": ["GaussMarkov3D", "RandomWalk3D", "RandomWaypoint3D"],

@@ -130,6 +130,48 @@ ROUTING_PARAMETER_DEFINITIONS = {
             "minimum": 0.1, "maximum": 120.0, "step": 0.1,
         },
     },
+    "RLFR": {
+        "hello_interval_s": {
+            "label": "HELLO interval", "unit": "s", "default": 0.5,
+            "minimum": 0.05, "maximum": 60.0, "step": 0.05,
+        },
+        "learning_rate": {
+            "label": "Learning rate (alpha)", "unit": "", "default": 0.7,
+            "minimum": 0.0, "maximum": 1.0, "step": 0.05,
+        },
+        "discount_factor": {
+            "label": "Discount factor (lambda)", "unit": "", "default": 0.9,
+            "minimum": 0.0, "maximum": 1.0, "step": 0.05,
+        },
+        "risk_weight": {
+            "label": "Risk weight (c)", "unit": "", "default": 0.5,
+            "minimum": 0.0, "maximum": 5.0, "step": 0.05,
+        },
+        "risk_learning_rate": {
+            "label": "Risk learning rate (beta)", "unit": "", "default": 0.8,
+            "minimum": 0.0, "maximum": 1.0, "step": 0.05,
+        },
+        "shared_experience_weight": {
+            "label": "Shared experience weight (upsilon)", "unit": "", "default": 0.05,
+            "minimum": 0.0, "maximum": 1.0, "step": 0.01,
+        },
+        "c1_latency_weight": {
+            "label": "Latency utility weight (c1)", "unit": "", "default": 0.8,
+            "minimum": 0.0, "maximum": 5.0, "step": 0.05,
+        },
+        "c2_energy_weight": {
+            "label": "Energy utility weight (c2)", "unit": "", "default": 0.6,
+            "minimum": 0.0, "maximum": 5.0, "step": 0.05,
+        },
+        "latency_threshold_ms": {
+            "label": "Latency QoS threshold (mu)", "unit": "ms", "default": 40.0,
+            "minimum": 1.0, "maximum": 1000.0, "step": 1.0,
+        },
+        "table_entry_lifetime_s": {
+            "label": "Neighbor lifetime", "unit": "s", "default": 2.0,
+            "minimum": 0.1, "maximum": 120.0, "step": 0.1,
+        },
+    },
 }
 
 

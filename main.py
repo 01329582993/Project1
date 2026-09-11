@@ -55,7 +55,8 @@ def parser():
     run.add_argument("--nodes", type=int, default=10)
     run.add_argument("--duration", type=float, default=20)
     run.add_argument("--seed", type=int, default=2025)
-    run.add_argument("--routing", default="Greedy")
+    run.add_argument("--routing", default="Greedy",
+                     choices=["Greedy", "DSDV", "GRAD", "OPAR", "QRouting", "QFANET", "QGeo", "QMR", "Baseline_DRL", "RLFR"])
     run.add_argument("--mac", default="CSMA_CA")
     run.add_argument("--mobility", default="GaussMarkov3D")
     run.add_argument("--uav-speed", type=float, default=config.UAV_SPEED)

@@ -1,4 +1,4 @@
-﻿import simpy
+import simpy
 import numpy as np
 import random
 import math
@@ -14,6 +14,7 @@ from routing.q_routing.q_routing import QRouting
 from routing.qfanet.qfanet import QFanet
 from routing.qgeo.qgeo import QGeo
 from routing.qmr.qmr import QMR
+from routing.rlfr.rlfr import RLFR
 from mac.csma_ca import CsmaCa
 from mac.pure_aloha import PureAloha
 from mac.tdma import Tdma
@@ -204,6 +205,7 @@ class Drone:
             "BASELINE_DRL": BaselineDrl,
             "DRL": BaselineDrl,
             "RL": BaselineDrl,
+            "RLFR": RLFR,
         }
 
         drl_protocol_cls = getattr(config, "DRL_ROUTING_PROTOCOL_CLASS", None)
