@@ -1,5 +1,7 @@
+import logging
 import threading
 import time
+import traceback
 from dataclasses import dataclass
 
 import simpy
@@ -181,6 +183,9 @@ class SimulationRuntime:
         except BaseException as error:
             self.error = f"{type(error).__name__}: {error}"
             final_status = "failed"
+            logging.getLogger("uavnetsim").error(
+                "Simulation thread failed:\n%s", traceback.format_exc()
+            )
             self.event_bus.publish("simulation_failed", environment.now, error=self.error)
         finally:
             if simulator is not None:

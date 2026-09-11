@@ -1,5 +1,7 @@
 import math
 import multiprocessing
+import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -9,11 +11,29 @@ from phy.sionna_worker import run_worker
 from utils import config
 
 
+def _ensure_drjit_llvm_env() -> None:
+    """Set DRJIT_LIBLLVM_PATH in the parent process so spawned children inherit it."""
+    if sys.platform != "win32":
+        return
+    if "DRJIT_LIBLLVM_PATH" in os.environ:
+        return
+    candidates = [
+        Path(sys.prefix) / "Lib" / "site-packages" / "drjit" / "LLVM-C.dll",
+        Path.home() / "llvm17" / "bin" / "LLVM-C.dll",
+        Path(r"C:\Program Files\LLVM\bin\LLVM-C.dll"),
+    ]
+    for dll in candidates:
+        if dll.is_file():
+            os.environ["DRJIT_LIBLLVM_PATH"] = str(dll)
+            break
+
+
 class SionnaWorkerClient:
     def __init__(self):
         scene_path = Path(config.SIONNA_SCENE_PATH)
         if not scene_path.is_file():
             raise FileNotFoundError(f"Sionna scene does not exist: {scene_path}")
+        _ensure_drjit_llvm_env()
         context = multiprocessing.get_context("spawn")
         parent_connection, child_connection = context.Pipe()
         self._process = context.Process(target=run_worker, args=(child_connection,), daemon=True)
@@ -67,9 +87,15 @@ class SionnaWorkerClient:
                 self._connection.send({"type": "stop"})
             except (BrokenPipeError, EOFError, OSError):
                 pass
-            process.join(timeout=5)
+            process.join(timeout=2)
+            if process.is_alive():
+                process.terminate()
+                process.join(timeout=1)
         self._connection.close()
-        process.close()
+        try:
+            process.close()
+        except Exception:
+            pass
         self._process = None
 
 

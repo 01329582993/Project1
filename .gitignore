@@ -8,3 +8,5 @@ frontend/dist/
 artifacts/
 running_log.log
 server.*.log
+uavnetsim.egg-info/
+*.egg-info/

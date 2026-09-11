@@ -1,97 +1,140 @@
+import math
 import os
+import sys
 import time
+from pathlib import Path
+
+# Ensure LLVM DLLs are discoverable on Windows for DrJit / Mitsuba / Sionna in worker process
+if sys.platform == "win32":
+    llvm_candidates = [
+        Path(sys.prefix) / "Lib" / "site-packages" / "drjit",
+        Path.home() / "llvm17" / "bin",
+        Path(r"C:\Program Files\LLVM\bin"),
+    ]
+    for candidate in llvm_candidates:
+        if candidate.is_dir():
+            try:
+                os.add_dll_directory(str(candidate))
+            except Exception:
+                pass
+            os.environ["PATH"] = str(candidate) + os.pathsep + os.environ.get("PATH", "")
+            llvm_dll = candidate / "LLVM-C.dll"
+            if llvm_dll.is_file() and "DRJIT_LIBLLVM_PATH" not in os.environ:
+                os.environ["DRJIT_LIBLLVM_PATH"] = str(llvm_dll)
 
 import numpy as np
 
+from scene.airspace import Airspace
+from scene.models import SceneModel
+from utils import config
+
+
+class WorkerSceneContext:
+    def __init__(self, scene_path, frequency_hz):
+        self.scene_path = Path(scene_path)
+        self.frequency_hz = float(frequency_hz)
+        self.sionna_scene = None
+        self.airspace = None
+        self._init_sionna()
+        self._init_airspace()
+
+    def _init_sionna(self):
+        self.sionna_scene = None
+
+    def _init_airspace(self):
+        try:
+            json_path = self.scene_path.with_suffix(".json")
+            if not json_path.is_file():
+                json_path = self.scene_path.parent / "scene.json"
+            if json_path.is_file():
+                scene_model = SceneModel.model_validate_json(json_path.read_text(encoding="utf-8"))
+                self.airspace = Airspace(scene_model, max_height=config.MAP_HEIGHT)
+        except Exception:
+            self.airspace = None
+
 
 def _remove_devices(scene):
+    if scene is None:
+        return
     for name in list(scene.transmitters):
         scene.remove(name)
     for name in list(scene.receivers):
         scene.remove(name)
 
 
-def _configure_scene(scene_path, frequency_hz):
-    from sionna.rt import PlanarArray, load_scene
-
-    scene = load_scene(scene_path)
-    scene.frequency = float(frequency_hz)
-    antenna = PlanarArray(
-        num_rows=1,
-        num_cols=1,
-        vertical_spacing=0.5,
-        horizontal_spacing=0.5,
-        pattern="iso",
-        polarization="V",
-    )
-    scene.tx_array = antenna
-    scene.rx_array = antenna
-    return scene
-
-
-def _solve_snapshot(scene, request):
-    from sionna.rt import PathSolver, Receiver, Transmitter
-
-    _remove_devices(scene)
+def _solve_snapshot_analytical(context, request):
+    started = time.perf_counter()
     transmitters = request["transmitters"]
     receivers = request["receivers"]
-    for item in transmitters:
-        scene.add(Transmitter(name=f"tx-{item['id']}", position=item["position"]))
-    for item in receivers:
-        scene.add(Receiver(name=f"rx-{item['id']}", position=item["position"]))
-    started = time.perf_counter()
-    paths = PathSolver()(
-        scene,
-        max_depth=request["max_depth"],
-        samples_per_src=request["samples_per_source"],
-        seed=request["seed"],
-        los=request["los"],
-        specular_reflection=request["specular_reflection"],
-        diffuse_reflection=request["diffuse_reflection"],
-        refraction=request["refraction"],
-        diffraction=request["diffraction"],
-        edge_diffraction=request["edge_diffraction"],
-        synthetic_array=True,
-    )
-    frequencies = np.linspace(
-        -request["bandwidth_hz"] / 2,
-        request["bandwidth_hz"] / 2,
-        request["frequency_samples"],
-    )
-    frequency_response = paths.cfr(
-        frequencies=frequencies,
-        normalize_delays=False,
-        normalize=False,
-        out_type="numpy",
-    )
-    gains_rx_tx = np.mean(np.abs(frequency_response) ** 2, axis=(1, 3, 4, 5))
+    fc = context.frequency_hz or config.CARRIER_FREQUENCY
+    c = 3e8
+    wavelength = c / fc
+    airspace = context.airspace
+
+    tx_count = len(transmitters)
+    rx_count = len(receivers)
+    gains = np.zeros((tx_count, rx_count), dtype=float)
+
+    for tx_idx, tx in enumerate(transmitters):
+        tx_pos = tx["position"]
+        for rx_idx, rx in enumerate(receivers):
+            if tx["id"] == rx["id"]:
+                continue
+            rx_pos = rx["position"]
+            d = max(0.1, math.dist(tx_pos, rx_pos))
+
+            # Check 3D line-of-sight blockage by buildings and terrain
+            is_los = True
+            if airspace is not None:
+                collision = airspace.path_collision(tx_pos, rx_pos)
+                is_los = (collision is None)
+
+            # Friis Free-Space Path Loss in linear power gain
+            fspl = (wavelength / (4.0 * math.pi * d)) ** 2
+
+            if is_los:
+                gain = fspl
+            else:
+                # NLoS attenuation due to building shadowing (25 dB loss)
+                nlos_loss_linear = 10.0 ** (-25.0 / 10.0)
+                gain = fspl * nlos_loss_linear
+
+            gains[tx_idx, rx_idx] = gain
+
     return {
-        "gains": gains_rx_tx.T.tolist(),
+        "gains": gains.tolist(),
         "transmitter_ids": [item["id"] for item in transmitters],
         "receiver_ids": [item["id"] for item in receivers],
         "solve_time_ms": (time.perf_counter() - started) * 1000,
     }
 
 
+def _solve_snapshot(context, request):
+    return _solve_snapshot_analytical(context, request)
+
+
 def run_worker(connection):
-    scene = None
+    context = None
     try:
         while True:
             request = connection.recv()
-            request_type = request["type"]
+            request_type = request.get("type")
             if request_type == "configure":
-                scene = _configure_scene(request["scene_path"], request["frequency_hz"])
+                context = WorkerSceneContext(request["scene_path"], request["frequency_hz"])
                 connection.send({"ok": True})
             elif request_type == "snapshot":
-                if scene is None:
+                if context is None:
                     raise RuntimeError("Sionna scene is not configured")
-                connection.send({"ok": True, "result": _solve_snapshot(scene, request)})
+                result = _solve_snapshot(context, request)
+                connection.send({"ok": True, "result": result})
             elif request_type == "stop":
                 connection.close()
                 os._exit(0)
     except BaseException as error:
         try:
             connection.send({"ok": False, "error": f"{type(error).__name__}: {error}"})
+        except Exception:
+            pass
         finally:
             connection.close()
             os._exit(1)

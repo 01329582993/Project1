@@ -1,5 +1,25 @@
 import logging
+import os
+import sys
 from pathlib import Path
+
+# Ensure LLVM DLLs are discoverable on Windows for DrJit / Mitsuba / Sionna
+if sys.platform == "win32":
+    llvm_candidates = [
+        Path(sys.prefix) / "Lib" / "site-packages" / "drjit",
+        Path.home() / "llvm17" / "bin",
+        Path(r"C:\Program Files\LLVM\bin"),
+    ]
+    for candidate in llvm_candidates:
+        if candidate.is_dir():
+            try:
+                os.add_dll_directory(str(candidate))
+            except Exception:
+                pass
+            os.environ["PATH"] = str(candidate) + os.pathsep + os.environ.get("PATH", "")
+            llvm_dll = candidate / "LLVM-C.dll"
+            if llvm_dll.is_file() and "DRJIT_LIBLLVM_PATH" not in os.environ:
+                os.environ["DRJIT_LIBLLVM_PATH"] = str(llvm_dll)
 
 from utils.ieee_802_11 import IeeeStandard
 
