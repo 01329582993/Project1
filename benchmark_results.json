@@ -1,0 +1,112 @@
+{
+  "Greedy": {
+    "sent": 469,
+    "received": 429,
+    "pdr": 91.47,
+    "delay_ms": 100.159,
+    "hops": 1.469,
+    "throughput_kbps": 1413.12,
+    "mac_delay_ms": 26.696,
+    "collisions": 376,
+    "routing_load": 0.4662
+  },
+  "DSDV": {
+    "sent": 469,
+    "received": 455,
+    "pdr": 97.01,
+    "delay_ms": 15.587,
+    "hops": 1.523,
+    "throughput_kbps": 1366.37,
+    "mac_delay_ms": 5.994,
+    "collisions": 416,
+    "routing_load": 0.4396
+  },
+  "GRAD": {
+    "sent": 469,
+    "received": 426,
+    "pdr": 90.83,
+    "delay_ms": 7.416,
+    "hops": 1.0,
+    "throughput_kbps": 1444.19,
+    "mac_delay_ms": 0.0,
+    "collisions": 2101,
+    "routing_load": 1.0657
+  },
+  "OPAR": {
+    "sent": 469,
+    "received": 281,
+    "pdr": 59.91,
+    "delay_ms": 8.794,
+    "hops": 1.335,
+    "throughput_kbps": 1417.75,
+    "mac_delay_ms": 13.824,
+    "collisions": 198,
+    "routing_load": 0.0
+  },
+  "QRouting": {
+    "sent": 469,
+    "received": 389,
+    "pdr": 82.94,
+    "delay_ms": 17.361,
+    "hops": 2.383,
+    "throughput_kbps": 1012.69,
+    "mac_delay_ms": 11.541,
+    "collisions": 769,
+    "routing_load": 0.5141
+  },
+  "QFANET": {
+    "sent": 469,
+    "received": 428,
+    "pdr": 91.26,
+    "delay_ms": 91.741,
+    "hops": 2.311,
+    "throughput_kbps": 919.71,
+    "mac_delay_ms": 9.386,
+    "collisions": 535,
+    "routing_load": 0.4673
+  },
+  "QGeo": {
+    "sent": 469,
+    "received": 414,
+    "pdr": 88.27,
+    "delay_ms": 22.221,
+    "hops": 2.708,
+    "throughput_kbps": 821.73,
+    "mac_delay_ms": 14.149,
+    "collisions": 692,
+    "routing_load": 0.4831
+  },
+  "QMR": {
+    "sent": 469,
+    "received": 370,
+    "pdr": 78.89,
+    "delay_ms": 15.561,
+    "hops": 2.451,
+    "throughput_kbps": 875.9,
+    "mac_delay_ms": 12.825,
+    "collisions": 522,
+    "routing_load": 0.5405
+  },
+  "Baseline_DRL": {
+    "sent": 469,
+    "received": 429,
+    "pdr": 91.47,
+    "delay_ms": 100.159,
+    "hops": 1.469,
+    "throughput_kbps": 1413.12,
+    "mac_delay_ms": 26.696,
+    "collisions": 376,
+    "routing_load": 0.4662
+  },
+  "RLFR": {
+    "sent": 469,
+    "received": 382,
+    "pdr": 81.45,
+    "delay_ms": 16.468,
+    "hops": 2.45,
+    "throughput_kbps": 891.36,
+    "mac_delay_ms": 7.449,
+    "collisions": 616,
+    "routing_load": 0.5236
+  }
+}
