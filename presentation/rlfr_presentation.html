@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RLFR Final Presentation — UAV Network Simulator</title>
+<title>RLFR Protocol Presentation — FANET Routing in UavNetSim</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@400;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,10 +17,10 @@
     --sky-blue: #8FAFC4;
     --pale-blue: #E3EDF4;
     --lavender-card: #EBE8F4;
-    --pink-header: #FFD2DC;
     --navy-text: #1E293B;
     --muted-text: #475569;
     --border-dashed: #333333;
+    --primary-blue: #0284C7;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,7 +39,7 @@
     overflow-x: hidden;
   }
 
-  /* Navigation Bar for browser */
+  /* Floating Control Header */
   .deck-nav {
     position: fixed;
     top: 16px;
@@ -48,17 +48,17 @@
     display: flex;
     gap: 10px;
     background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(8px);
-    padding: 8px 16px;
+    backdrop-filter: blur(10px);
+    padding: 10px 18px;
     border-radius: 30px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
   }
   .deck-nav button {
     background: #2A364F;
     color: #fff;
     border: none;
-    padding: 6px 14px;
+    padding: 8px 16px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
@@ -78,7 +78,6 @@
     padding: 0 8px;
   }
 
-  /* Presentation container */
   .presentation-container {
     display: flex;
     flex-direction: column;
@@ -87,7 +86,6 @@
     padding: 40px 0;
   }
 
-  /* Individual Slide Canvas */
   .slide {
     width: 1920px;
     height: 1080px;
@@ -109,6 +107,36 @@
     }
   }
 
+  /* Slide Number */
+  .slide-number {
+    position: absolute;
+    bottom: 40px;
+    right: 60px;
+    font-size: 26px;
+    font-weight: 800;
+    color: #1E293B;
+    z-index: 10;
+  }
+
+  /* Decorative Corner Emblem from Canva Reference */
+  .decorative-corner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 140px;
+    height: 140px;
+  }
+
+  /* Common Headings */
+  .slide-main-title {
+    font-family: 'Lora', 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 24px;
+    line-height: 1.15;
+  }
+
   /* Slide 1 Cover */
   .slide-cover {
     background-image: url('images/cover_drone.jpg');
@@ -123,7 +151,7 @@
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
+    background: linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.65) 100%);
     z-index: 1;
   }
   .cover-content {
@@ -144,22 +172,22 @@
   }
   .cover-title-box {
     margin-top: auto;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
   }
   .cover-sub {
-    font-size: 38px;
+    font-size: 36px;
     font-weight: 800;
-    color: #fff;
-    letter-spacing: 5px;
-    margin-bottom: 10px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    margin-bottom: 12px;
     text-transform: uppercase;
   }
   .cover-main-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: 150px;
+    font-size: 125px;
     font-weight: 900;
     color: #fff;
-    line-height: 0.9;
+    line-height: 0.95;
     letter-spacing: -2px;
     text-transform: uppercase;
   }
@@ -168,120 +196,16 @@
     right: 80px;
     bottom: 80px;
     font-family: 'Montserrat', sans-serif;
-    font-size: 72px;
+    font-size: 64px;
     font-weight: 900;
     color: #fff;
-    line-height: 1.05;
+    line-height: 1.1;
     text-align: right;
     letter-spacing: 2px;
     z-index: 2;
   }
-  .slide-number {
-    position: absolute;
-    bottom: 40px;
-    right: 60px;
-    font-size: 26px;
-    font-weight: 800;
-    color: #1E293B;
-    z-index: 10;
-  }
 
-  /* Decorative Corner Emblem */
-  .decorative-corner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 140px;
-    height: 140px;
-  }
-
-  /* Common Slide Typography */
-  .slide-main-title {
-    font-family: 'Lora', 'Playfair Display', serif;
-    font-size: 76px;
-    font-weight: 600;
-    color: #1F2937;
-    margin-bottom: 24px;
-    line-height: 1.15;
-  }
-  .slide-rule {
-    width: 100%;
-    height: 2px;
-    background: #CBD5E1;
-    margin-bottom: 60px;
-  }
-
-  /* Slide 2: Team Members */
-  .team-grid {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 140px;
-    padding: 0 80px;
-  }
-  .team-card {
-    text-align: center;
-    flex: 1;
-  }
-  .team-name {
-    font-family: 'Lora', serif;
-    font-size: 46px;
-    font-weight: 600;
-    color: #1F2937;
-    line-height: 1.3;
-  }
-  .team-id {
-    font-family: 'Lora', serif;
-    font-size: 38px;
-    color: #4B5563;
-    margin-top: 10px;
-  }
-
-  /* Slide 3: Project Overview */
-  .slide-overview {
-    background: var(--sky-blue);
-    display: flex;
-    padding: 100px 120px;
-  }
-  .overview-left {
-    flex: 1.2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 60px;
-  }
-  .overview-left .slide-main-title {
-    color: #0F172A;
-    font-size: 84px;
-    margin-bottom: 40px;
-  }
-  .overview-desc {
-    font-family: 'Lora', serif;
-    font-size: 32px;
-    line-height: 1.6;
-    color: #0F172A;
-    margin-bottom: 30px;
-  }
-  .overview-right {
-    flex: 0.8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .overview-img-frame {
-    width: 100%;
-    height: 750px;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  }
-  .overview-img-frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Slide 4: Problem & Motivation */
+  /* Slide 2: Problem & Motivation */
   .problem-layout {
     display: flex;
     height: 100%;
@@ -320,12 +244,12 @@
   }
   .problem-section-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: 52px;
+    font-size: 48px;
     font-weight: 900;
     color: #1E293B;
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: 2px;
-    margin-top: 40px;
+    margin-top: 30px;
   }
   .problem-box-dark {
     background: var(--dark-green);
@@ -355,7 +279,7 @@
   .box-header-title {
     font-size: 36px;
     font-weight: 700;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     text-align: center;
   }
   .box-bullets {
@@ -367,177 +291,10 @@
     gap: 12px;
   }
 
-  /* Slide 5: Research Questions */
-  .research-layout {
-    padding: 80px 100px;
-    display: flex;
-    gap: 60px;
-    height: 100%;
-  }
-  .research-left {
-    flex: 0.9;
-  }
-  .research-mid {
-    flex: 0.9;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    align-items: center;
-  }
-  .dashed-card {
+  /* Dashed Cards & Containers */
+  .dashed-card-container {
+    background: #FAF5EE;
     border: 3px dashed #1E293B;
-    border-radius: 24px;
-    overflow: hidden;
-    width: 320px;
-    height: 220px;
-    position: relative;
-    background: #E2E8F0;
-  }
-  .dashed-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .card-label {
-    text-align: center;
-    font-family: 'Lora', serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: #1E293B;
-    margin-top: 6px;
-  }
-  .research-right {
-    flex: 1.2;
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
-    justify-content: center;
-  }
-  .objective-bubble {
-    background: var(--lavender-card);
-    border-radius: 24px;
-    padding: 34px 44px;
-  }
-  .objective-bubble-title {
-    font-size: 32px;
-    font-weight: 800;
-    color: #0F172A;
-    margin-bottom: 12px;
-  }
-  .objective-bubble-text {
-    font-family: 'Lora', serif;
-    font-size: 26px;
-    line-height: 1.5;
-    color: #334155;
-  }
-
-  /* Slide 6: Related Work & Research Gap */
-  .gap-layout {
-    padding: 70px 100px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  .comparison-split-box {
-    display: flex;
-    border: 2px dashed #1E293B;
-    border-radius: 24px;
-    flex: 1;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-  .split-left {
-    flex: 1.2;
-    border-right: 2px dashed #1E293B;
-    display: flex;
-    flex-direction: column;
-  }
-  .split-right {
-    flex: 0.8;
-    display: flex;
-    flex-direction: column;
-  }
-  .gap-table {
-    width: 100%;
-    border-collapse: collapse;
-    height: 100%;
-  }
-  .gap-table th {
-    background: #F4EBE1;
-    font-size: 28px;
-    font-weight: 700;
-    padding: 20px;
-    border-bottom: 2px dashed #1E293B;
-    border-right: 2px dashed #1E293B;
-    text-align: center;
-  }
-  .gap-table th:last-child { border-right: none; }
-  .gap-table td {
-    padding: 22px 28px;
-    font-family: 'Lora', serif;
-    font-size: 25px;
-    line-height: 1.45;
-    border-bottom: 1px solid #E2E8F0;
-    border-right: 2px dashed #1E293B;
-    text-align: center;
-  }
-  .gap-table td:last-child { border-right: none; }
-  .gap-table tr:nth-child(even) td { background: #FAF5EE; }
-
-  .gap-header-row {
-    display: flex;
-    border-bottom: 2px dashed #1E293B;
-    background: #F4EBE1;
-  }
-  .gap-header-cell {
-    flex: 1;
-    text-align: center;
-    padding: 20px;
-    font-size: 28px;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-  .gap-header-cell:first-child { border-right: 2px dashed #1E293B; }
-  .gap-content-row {
-    display: flex;
-    flex: 1;
-  }
-  .gap-content-cell {
-    flex: 1;
-    padding: 30px;
-    font-family: 'Lora', serif;
-    font-size: 26px;
-    line-height: 1.6;
-  }
-  .gap-content-cell:first-child { border-right: 2px dashed #1E293B; background: #FAF5EE; }
-
-  /* Slide 7: Dataset / Simulation Setup */
-  .dataset-layout {
-    padding: 70px 100px;
-    display: flex;
-    gap: 60px;
-    height: 100%;
-  }
-  .dataset-left {
-    flex: 0.9;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-  .dataset-right {
-    flex: 1.1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .dataset-overview-card {
-    background: var(--dark-green);
-    color: #fff;
-    border-radius: 24px;
-    padding: 36px 44px;
-  }
-  .dataset-challenges-card {
-    background: #F4EBE1;
     border-radius: 24px;
     padding: 36px 44px;
   }
@@ -550,17 +307,17 @@
   }
   .custom-dashed-table th {
     background: #F4EBE1;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
-    padding: 24px;
+    padding: 20px;
     border-bottom: 3px dashed #1E293B;
     border-right: 3px dashed #1E293B;
     text-align: center;
   }
   .custom-dashed-table th:last-child { border-right: none; }
   .custom-dashed-table td {
-    padding: 24px;
-    font-size: 28px;
+    padding: 18px 24px;
+    font-size: 25px;
     font-family: 'Lora', serif;
     border-bottom: 2px solid #CBD5E1;
     border-right: 3px dashed #1E293B;
@@ -568,42 +325,36 @@
   }
   .custom-dashed-table td:last-child { border-right: none; }
 
-  /* Slide 8: Pipeline Flowchart */
+  /* Flow row */
   .flow-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 50px;
-    padding: 0 40px;
+    margin-bottom: 40px;
+    padding: 0 20px;
   }
   .flow-pill {
     background: var(--dark-green);
     color: #fff;
-    padding: 24px 32px;
+    padding: 22px 28px;
     border-radius: 16px;
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 600;
     text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     flex: 1;
     max-width: 250px;
   }
   .flow-arrow {
     width: 0;
     height: 0;
-    border-top: 16px solid transparent;
-    border-bottom: 16px solid transparent;
-    border-left: 24px solid var(--gold);
-    margin: 0 10px;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+    border-left: 22px solid var(--gold);
+    margin: 0 8px;
   }
 
-  /* Slide 12: Benchmark Table (Like Page 12 of PDF) */
-  .table-benchmark-container {
-    padding: 60px 100px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+  /* Benchmark Table */
   .canva-benchmark-table {
     width: 100%;
     border-collapse: collapse;
@@ -613,17 +364,17 @@
   }
   .canva-benchmark-table th {
     background: #F4EBE1;
-    font-size: 30px;
+    font-size: 28px;
     font-weight: 700;
-    padding: 22px;
+    padding: 20px;
     border-bottom: 3px solid #1E293B;
     border-right: 3px solid #1E293B;
     text-align: center;
   }
   .canva-benchmark-table th:last-child { border-right: none; }
   .canva-benchmark-table td {
-    padding: 16px 20px;
-    font-size: 26px;
+    padding: 15px 18px;
+    font-size: 24px;
     font-family: 'Lora', serif;
     font-weight: 500;
     border-bottom: 2px solid #E2E8F0;
@@ -636,107 +387,17 @@
     font-weight: 700;
     color: #0284C7;
   }
-  .table-callout-box {
-    margin-top: 30px;
-    font-size: 28px;
-    font-family: 'Lora', serif;
-    color: #1E293B;
-    line-height: 1.5;
-  }
 
-  /* Slide 13: Bar Chart Comparison */
-  .chart-slide-layout {
-    padding: 60px 100px;
-    display: flex;
-    gap: 60px;
-    height: 100%;
-    align-items: center;
-  }
-  .chart-canvas-box {
-    flex: 1.2;
-    background: #fff;
-    border: 3px solid #CBD5E1;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  }
+  /* Chart Layout */
   .chart-dark-bubble {
-    flex: 0.8;
     background: #2D3748;
     color: #fff;
     border-radius: 30px;
-    padding: 50px 60px;
+    padding: 44px 50px;
     position: relative;
   }
-  .chart-dark-bubble::after {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 50%;
-    border-top: 20px solid transparent;
-    border-bottom: 20px solid transparent;
-    border-right: 20px solid #2D3748;
-  }
 
-  /* Slide 15: Limitations Table */
-  .limitations-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 3px solid #1E293B;
-  }
-  .limitations-table th {
-    background: var(--pink-header);
-    font-size: 32px;
-    font-weight: 700;
-    padding: 24px;
-    border-bottom: 3px solid #1E293B;
-    border-right: 3px solid #1E293B;
-    text-align: center;
-  }
-  .limitations-table th:last-child { border-right: none; }
-  .limitations-table td {
-    padding: 22px 30px;
-    font-size: 26px;
-    font-family: 'Lora', serif;
-    border-bottom: 2px solid #E2E8F0;
-    border-right: 3px solid #1E293B;
-  }
-  .limitations-table td:last-child { border-right: none; }
-
-  /* Slide 17: Search box References */
-  .ref-search-header {
-    background: #fff;
-    border: 3px solid #1E293B;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 40px;
-    margin-bottom: 50px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  }
-  .ref-card-item {
-    margin-bottom: 28px;
-  }
-  .ref-badge {
-    font-size: 32px;
-    font-weight: 800;
-    color: #0F172A;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 6px;
-  }
-  .ref-text {
-    font-family: 'Lora', serif;
-    font-size: 26px;
-    color: #334155;
-    padding-left: 48px;
-    text-decoration: underline;
-    text-underline-offset: 6px;
-  }
-
-  /* Slide 18: Closing Thank You */
+  /* Thank You Slide */
   .slide-closing {
     background-image: url('images/swarm_drone.jpg');
     background-size: cover;
@@ -757,24 +418,24 @@
     z-index: 2;
     background: var(--gold);
     color: #fff;
-    padding: 70px 140px;
+    padding: 60px 120px;
     border-radius: 28px;
     text-align: center;
     box-shadow: 0 25px 50px rgba(0,0,0,0.4);
   }
   .closing-main-text {
     font-family: 'Cinzel', 'Montserrat', serif;
-    font-size: 110px;
+    font-size: 100px;
     font-weight: 900;
     letter-spacing: 4px;
     line-height: 1;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     color: #FFFFFF;
     text-shadow: 0 4px 15px rgba(0,0,0,0.25);
   }
   .closing-sub-text {
     font-family: 'Lora', italic, serif;
-    font-size: 54px;
+    font-size: 50px;
     color: #FFFFFF;
     font-style: italic;
   }
@@ -785,92 +446,35 @@
 <div class="deck-nav">
   <button onclick="scrollToSlide(0)">⏮ First</button>
   <button onclick="prevSlide()">◀ Prev</button>
-  <div class="counter" id="navCounter">Slide 1 / 18</div>
+  <div class="counter" id="navCounter">Slide 1 / 10</div>
   <button onclick="nextSlide()">Next ▶</button>
-  <button onclick="scrollToSlide(17)">Last ⏭</button>
+  <button onclick="scrollToSlide(9)">Last ⏭</button>
   <button onclick="window.print()" style="background: var(--gold); color: #000;">🖨️ Export PDF</button>
 </div>
 
 <div class="presentation-container">
 
   <!-- ========================================== -->
-  <!-- SLIDE 1: COVER SLIDE                       -->
+  <!-- SLIDE 1: TITLE & COVER                     -->
   <!-- ========================================== -->
   <section class="slide slide-cover" id="slide-1">
     <div class="cover-content">
-      <div class="cover-date">8.4.2026</div>
+      <div class="cover-date">IEEE TCOMM 2024</div>
       <div class="cover-title-box">
-        <div class="cover-sub">UAV NETWORK SIMULATION</div>
-        <div class="cover-main-title">FINAL<br>PRESENTATION</div>
+        <div class="cover-sub">Flying Ad-Hoc Networks (FANETs)</div>
+        <div class="cover-main-title">RLFR ALGORITHM<br>IN UAVNETSIM</div>
       </div>
     </div>
-    <div class="cover-vertical-code">CSE<br>4622</div>
+    <div class="cover-vertical-code">NET<br>ROUTING</div>
     <div class="slide-number" style="color: #fff;">1</div>
   </section>
 
   <!-- ========================================== -->
-  <!-- SLIDE 2: TEAM MEMBERS                      -->
+  <!-- SLIDE 2: THE PROBLEM & MOTIVATION IN FANETs-->
   <!-- ========================================== -->
-  <section class="slide" style="padding: 100px 140px;" id="slide-2">
-    <!-- Top-left emblem -->
-    <svg class="decorative-corner" viewBox="0 0 100 100">
-      <path d="M0,0 Q60,0 80,60 Q85,85 100,100 L0,100 Z" fill="#2E4032" />
-      <path d="M10,0 Q65,0 85,65 Q90,85 100,95" stroke="#F5B82E" stroke-width="8" fill="none" />
-    </svg>
-
-    <div style="text-align: center; margin-top: 30px;">
-      <h1 class="slide-main-title" style="font-size: 92px;">Team Members</h1>
-      <div class="slide-rule" style="width: 80%; margin: 0 auto 80px auto;"></div>
-    </div>
-
-    <div class="team-grid">
-      <div class="team-card">
-        <div class="team-name">Moomtahina<br>Ahsan</div>
-        <div class="team-id">220041106</div>
-      </div>
-      <div class="team-card">
-        <div class="team-name">Haman Bello<br>&nbsp;</div>
-        <div class="team-id">220041158</div>
-      </div>
-      <div class="team-card">
-        <div class="team-name">Madina<br>Akbari</div>
-        <div class="team-id">220041162</div>
-      </div>
-    </div>
-    <div class="slide-number">2</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 3: PROJECT OVERVIEW                  -->
-  <!-- ========================================== -->
-  <section class="slide slide-overview" id="slide-3">
-    <div class="overview-left">
-      <h1 class="slide-main-title">Project Overview</h1>
-      <p class="overview-desc">
-        This project integrates and validates the <strong>RLFR (Reinforcement Learning Fast Routing)</strong> protocol from <em>IEEE Transactions on Communications (Nov 2024)</em> inside the UavNetSim discrete-event simulation platform.
-      </p>
-      <p class="overview-desc">
-        It comprehensively evaluates RLFR against <strong>nine existing ad-hoc routing protocols</strong> (Greedy, DSDV, GRAD, OPAR, QRouting, QFANET, QGeo, QMR, and Baseline DRL) under identical 10-node Gauss-Markov 3D mobility dynamics.
-      </p>
-      <p class="overview-desc">
-        RLFR achieved an average end-to-end delay of <strong>16.47 ms</strong>, cutting network latency by <strong>> 5.5× compared to Q-FANET (91.74 ms)</strong> while maintaining an 81.45% packet delivery ratio.
-      </p>
-    </div>
-    <div class="overview-right">
-      <div class="overview-img-frame">
-        <img src="images/drone_sensor.jpg" alt="Autonomous Drone Sensor System">
-      </div>
-    </div>
-    <div class="slide-number" style="color: #0F172A;">3</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 4: PROBLEM AND MOTIVATION            -->
-  <!-- ========================================== -->
-  <section class="slide" id="slide-4">
+  <section class="slide" id="slide-2">
     <div class="problem-layout">
       <div class="problem-left-col">
-        <!-- Concentric arcs in yellow/amber -->
         <svg class="concentric-arcs" viewBox="0 0 200 200">
           <circle cx="20" cy="20" r="40" fill="none" stroke="#F5B82E" stroke-width="8" stroke-dasharray="12 4" />
           <circle cx="20" cy="20" r="70" fill="none" stroke="#F5B82E" stroke-width="8" />
@@ -880,11 +484,11 @@
         </svg>
 
         <div class="problem-framed-img">
-          <img src="images/cover_drone.jpg" alt="Drone Flying in Storm">
+          <img src="images/cover_drone.jpg" alt="Aerial Drone in 3D Motion">
         </div>
 
         <div class="problem-section-title">
-          PROBLEM<br>AND<br>MOTIVATION
+          FANET ROUTING<br>CHALLENGES &amp;<br>MOTIVATION
         </div>
       </div>
 
@@ -893,11 +497,11 @@
         <div style="position: relative; margin-top: 40px;">
           <div class="box-num">01.</div>
           <div class="problem-box-dark">
-            <div class="box-header-title">Problem</div>
+            <div class="box-header-title">The Networking Problem</div>
             <ul class="box-bullets">
-              <li>High 3D UAV mobility causes rapid link breakages and dynamic topology shifts.</li>
-              <li>Greedy forwarding frequently falls into <strong>routing voids</strong> (local minimum traps).</li>
-              <li>Classical Q-routing explores blindly, picking degraded links that cause severe latency spikes.</li>
+              <li>High 3D UAV mobility (10 m/s) causes rapid wireless link degradation.</li>
+              <li>Greedy geographic forwarding gets trapped in <strong>routing voids</strong>.</li>
+              <li>Standard Q-routing explores blindly, triggering massive latency spikes (>90 ms).</li>
             </ul>
           </div>
         </div>
@@ -906,13 +510,135 @@
         <div style="position: relative; margin-top: 50px;">
           <div class="box-num" style="left: auto; right: 20px;">02.</div>
           <div class="motivation-box-gold">
-            <div class="box-header-title">Motivation</div>
+            <div class="box-header-title">The RLFR Solution</div>
             <ul class="box-bullets">
-              <li>Time-critical aerial missions require guaranteed, low end-to-end packet latency.</li>
-              <li>Drone battery limits demand adaptive, intelligent transmission power control.</li>
-              <li>Safe reinforcement learning can bound latency risk while sharing neighbor experience cooperatively.</li>
+              <li>Bounded Latency: Enforces a strict 40 ms QoS delay budget via a <strong>Risk Table</strong>.</li>
+              <li>Energy Efficiency: Selects dynamic relay power levels (25, 50, 75, 100 mW).</li>
+              <li>Cooperative Mesh: Shares state values in beacons for fast convergence without central servers.</li>
             </ul>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">2</div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- SLIDE 3: THE THREE PILLARS OF RLFR         -->
+  <!-- ========================================== -->
+  <section class="slide" style="padding: 90px 100px;" id="slide-3">
+    <!-- Corner emblem -->
+    <svg class="decorative-corner" viewBox="0 0 100 100">
+      <path d="M0,0 Q60,0 80,60 Q85,85 100,100 L0,100 Z" fill="#2E4032" />
+      <path d="M10,0 Q65,0 85,65 Q90,85 100,95" stroke="#F5B82E" stroke-width="8" fill="none" />
+    </svg>
+
+    <h1 class="slide-main-title" style="margin-left: 50px;">The Three Core Pillars of RLFR</h1>
+    
+    <div style="display: flex; gap: 40px; margin-top: 50px;">
+      <!-- Pillar 1 -->
+      <div style="flex: 1; background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 40px; display: flex; flex-direction: column;">
+        <div style="font-size: 32px; font-weight: 800; color: #0284C7; margin-bottom: 16px;">1. Multi-Objective Utility</div>
+        <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.55; color: #334155; margin-bottom: 16px;">
+          Rather than optimizing purely for distance or delay, RLFR formulates a joint utility combining delivery success, packet latency, and transmission power.
+        </p>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #1E293B; background: #E2E8F0; padding: 12px; border-radius: 8px; text-align: center;">
+          u = &kappa; &minus; c<sub>1</sub>&tau; &minus; c<sub>2</sub>w
+        </div>
+      </div>
+
+      <!-- Pillar 2 -->
+      <div style="flex: 1; background: var(--dark-green); color: #fff; border-radius: 24px; padding: 40px; display: flex; flex-direction: column;">
+        <div style="font-size: 32px; font-weight: 800; color: var(--gold); margin-bottom: 16px;">2. Safe Latency Exploration</div>
+        <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.55; margin-bottom: 16px;">
+          Maintains an explicit Risk Table R(s, a). In the Boltzmann action policy, choices that historically breach the 40 ms latency deadline are strongly penalized.
+        </p>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; text-align: center;">
+          &pi;(s,a) &prop; exp(Q &minus; c&middot;R)
+        </div>
+      </div>
+
+      <!-- Pillar 3 -->
+      <div style="flex: 1; background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 40px; display: flex; flex-direction: column;">
+        <div style="font-size: 32px; font-weight: 800; color: #0284C7; margin-bottom: 16px;">3. Distributed Bellman Updates</div>
+        <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.55; color: #334155; margin-bottom: 16px;">
+          Drones piggyback their local state-value V(s) into periodic 0.5 s HELLO beacons. Neighbors learn cooperatively with zero central coordination.
+        </p>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #1E293B; background: #E2E8F0; padding: 12px; border-radius: 8px; text-align: center;">
+          Q &larr; (1&minus;&alpha;)Q + &alpha;[u + &lambda;max Q + &upsilon;&Sigma;V<sub>j</sub>]
+        </div>
+      </div>
+    </div>
+    <div class="slide-number">3</div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- SLIDE 4: END-TO-END ROUTING FLOW           -->
+  <!-- ========================================== -->
+  <section class="slide" style="padding: 80px 100px;" id="slide-4">
+    <h1 class="slide-main-title">How RLFR Routes Packets Hop-by-Hop</h1>
+
+    <!-- Process Flow -->
+    <div class="flow-row">
+      <div class="flow-pill">1. Packet Arrives at Drone</div>
+      <div class="flow-arrow"></div>
+      <div class="flow-pill">2. Loop Check (&Omega; Cache)</div>
+      <div class="flow-arrow"></div>
+      <div class="flow-pill">3. Safe Boltzmann Selection</div>
+      <div class="flow-arrow"></div>
+      <div class="flow-pill">4. Power Level Chosen (p)</div>
+      <div class="flow-arrow"></div>
+      <div class="flow-pill">5. CSMA/CA MAC Transmission</div>
+    </div>
+
+    <!-- State & Decisions Grid -->
+    <div style="display: flex; gap: 50px; margin-top: 30px;">
+      <div style="flex: 1.1;">
+        <table class="custom-dashed-table">
+          <thead>
+            <tr>
+              <th>Observed State Variable</th>
+              <th>Symbol</th>
+              <th>Network Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Candidate Drone Battery</td>
+              <td>b</td>
+              <td>Avoids dying relays</td>
+            </tr>
+            <tr>
+              <td>Received SNR &amp; Link Gain</td>
+              <td>&xi;</td>
+              <td>Ensures high-quality wireless channel</td>
+            </tr>
+            <tr>
+              <td>Accumulated Hop Count</td>
+              <td>&varrho;</td>
+              <td>Prevents excessive path stretching</td>
+            </tr>
+            <tr>
+              <td>One-Hop Queuing Delay</td>
+              <td>t</td>
+              <td>Detects local buffer congestion</td>
+            </tr>
+            <tr>
+              <td>Active Neighbor Count</td>
+              <td>&varpi;</td>
+              <td>Measures local swarm density</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="flex: 0.9; background: var(--dark-green); color: #fff; border-radius: 24px; padding: 36px 44px; display: flex; flex-direction: column; justify-content: center;">
+        <div style="font-size: 32px; font-weight: 700; color: var(--gold); margin-bottom: 14px;">Loop Elimination: Cache &Omega;</div>
+        <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.6;">
+          Every drone maintains a cache &Omega; of <code>(source_id, packet_id)</code> tuples. If a packet loops back due to mobile topology shifts, it is dropped instantly.
+        </p>
+        <div style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.6; margin-top: 14px; color: #A7F3D0;">
+          Result: Zero broadcast storms and elimination of routing cycles.
         </div>
       </div>
     </div>
@@ -920,42 +646,67 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- SLIDE 5: RESEARCH QUESTIONS & OBJECTIVES   -->
+  <!-- SLIDE 5: MATH FORMULATION I - UTILITY & PWR-->
   <!-- ========================================== -->
-  <section class="slide" id="slide-5">
-    <div class="research-layout">
-      <div class="research-left">
-        <h1 class="slide-main-title" style="font-size: 70px;">Research<br>Questions</h1>
-        <p style="font-family: 'Lora', serif; font-size: 30px; line-height: 1.6; color: #334155; margin-top: 30px;">
-          How effectively can safe reinforcement learning with latency-risk constraints balance packet delivery ratio, end-to-end delay, and communication energy in dynamic FANETs?
-        </p>
+  <section class="slide" style="padding: 80px 100px;" id="slide-5">
+    <h1 class="slide-main-title">Mathematical Formulation: Utility &amp; Power Control</h1>
+
+    <div style="display: flex; gap: 50px; margin-top: 30px;">
+      <div style="flex: 1.1;">
+        <div class="dashed-card-container" style="margin-bottom: 24px;">
+          <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 10px;">Multi-Objective Utility (Equation 3)</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 700; color: #0284C7; margin-bottom: 14px;">
+            u<sup>(k)</sup> = &kappa; &minus; c<sub>1</sub>&middot;&tau; &minus; c<sub>2</sub>&middot;w
+          </div>
+          <p style="font-family: 'Lora', serif; font-size: 23px; color: #475569; line-height: 1.5;">
+            Quantifies the multi-hop transmission reward when forwarding data packet k.
+          </p>
+        </div>
+
+        <table class="custom-dashed-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>Physical Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Delivery Success (&kappa;)</td>
+              <td>1 or 0</td>
+              <td>Confirmed via destination ACK</td>
+            </tr>
+            <tr>
+              <td>Normalized Latency (&tau;)</td>
+              <td>c<sub>1</sub> = 0.8</td>
+              <td>End-to-end packet delay / T<sub>max</sub></td>
+            </tr>
+            <tr>
+              <td>Transmission Energy (w)</td>
+              <td>c<sub>2</sub> = 0.6</td>
+              <td>w = p &middot; (z / r) (Power &times; Duration)</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="research-mid">
-        <div class="dashed-card">
-          <img src="images/cover_drone.jpg" alt="GaussMarkov 3D Mobility">
-        </div>
-        <div class="card-label">01. GaussMarkov 3D Mobility</div>
-
-        <div class="dashed-card">
-          <img src="images/drone_sensor.jpg" alt="Radio Link & MAC">
-        </div>
-        <div class="card-label">02. CSMA/CA MAC &amp; SNR</div>
-      </div>
-
-      <div class="research-right">
-        <div class="objective-bubble">
-          <div class="objective-bubble-title">Objective 1: Multi-Objective Utility</div>
-          <div class="objective-bubble-text">
-            Formulate a joint reinforcement learning reward function that directly trades off delivery success (&kappa;), end-to-end delay (&tau;), and transmit energy (w).
+      <div style="flex: 0.9; display: flex; flex-direction: column; gap: 24px;">
+        <div style="background: #F4EBE1; border-radius: 24px; padding: 34px 40px;">
+          <div style="font-size: 30px; font-weight: 700; color: #1E293B; margin-bottom: 10px;">Relay Power Action Space</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 26px; color: #0284C7; margin-bottom: 12px;">
+            a = (next_hop, p), &nbsp; p &isin; {25, 50, 75, 100} mW
           </div>
+          <p style="font-family: 'Lora', serif; font-size: 23px; line-height: 1.5; color: #334155;">
+            By choosing power dynamically based on link SNR &xi;, drones conserve battery and shrink the spatial interference footprint.
+          </p>
         </div>
 
-        <div class="objective-bubble">
-          <div class="objective-bubble-title">Objective 2: Safe Latency Exploration</div>
-          <div class="objective-bubble-text">
-            Constrain Boltzmann action exploration using an explicit Risk Table R(s, a) tracking probability of exceeding the 40 ms QoS latency deadline.
-          </div>
+        <div style="background: var(--dark-green); color: #fff; border-radius: 24px; padding: 34px 40px;">
+          <div style="font-size: 28px; font-weight: 700; color: var(--gold); margin-bottom: 10px;">The Single-Objective Failure</div>
+          <p style="font-family: 'Lora', serif; font-size: 23px; line-height: 1.5;">
+            Greedy forwarding picks maximum-distance hops with high bit error rates. RLFR balances distance against transmit energy and delay penalties.
+          </p>
         </div>
       </div>
     </div>
@@ -963,681 +714,196 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- SLIDE 6: RELATED WORK AND RESEARCH GAP     -->
+  <!-- SLIDE 6: MATH FORMULATION II - SAFE EXPLOR -->
   <!-- ========================================== -->
-  <section class="slide" id="slide-6">
-    <div class="gap-layout">
-      <h1 class="slide-main-title" style="font-size: 68px; margin-bottom: 20px;">Related Work and Research Gap</h1>
-      
-      <div class="comparison-split-box">
-        <div class="split-left">
-          <table class="gap-table">
-            <thead>
-              <tr>
-                <th>Previous Approaches</th>
-                <th>Our RLFR Algorithm</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Greedy geographic forwarding based on single metric (distance)</td>
-                <td>Multi-objective utility (Delivery + Delay + Energy)</td>
-              </tr>
-              <tr>
-                <td>Standard Q-learning with unconstrained random exploration</td>
-                <td>Safe Boltzmann exploration penalized by latency-risk R(s,a)</td>
-              </tr>
-              <tr>
-                <td>Fixed maximum transmission power wasting UAV battery</td>
-                <td>Dynamic 4-level relay power control (25, 50, 75, 100 mW)</td>
-              </tr>
-              <tr>
-                <td>Isolated learning without inter-drone experience sharing</td>
-                <td>Distributed Bellman updates with piggybacked state values V_j</td>
-              </tr>
-            </tbody>
-          </table>
+  <section class="slide" style="padding: 80px 100px;" id="slide-6">
+    <h1 class="slide-main-title">Mathematical Formulation: Safe Exploration &amp; Risk</h1>
+
+    <div style="display: flex; gap: 50px; margin-top: 30px;">
+      <div style="flex: 1.1;">
+        <div class="dashed-card-container" style="margin-bottom: 24px;">
+          <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 10px;">Safe Boltzmann Policy (Equation 2)</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; color: #0284C7; margin-bottom: 14px;">
+            &pi;(s, a) = exp(Q(s,a) &minus; c&middot;R(s,a)) / &Sigma; exp(...)
+          </div>
+          <p style="font-family: 'Lora', serif; font-size: 23px; color: #475569; line-height: 1.5;">
+            The risk weight <strong style="color: #E11D48;">c = 0.5</strong> penalizes actions that violate latency constraints.
+          </p>
         </div>
 
-        <div class="split-right">
-          <div class="gap-header-row">
-            <div class="gap-header-cell">RESEARCH GAP</div>
-            <div class="gap-header-cell">OUR CONTRIBUTIONS</div>
+        <div class="dashed-card-container">
+          <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 10px;">Risk Table Update (Equations 5 &amp; 6)</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 30px; font-weight: 700; color: #0284C7; margin-bottom: 14px;">
+            l<sup>(k)</sup> = <b>1</b>(&tau; &gt; &mu;) &nbsp; [&mu; = 40 ms threshold]<br>
+            R(s,a) &larr; (1 &minus; &beta;)&middot;R(s,a) + &beta;&middot;l<sup>(k)</sup>
           </div>
-          <div class="gap-content-row">
-            <div class="gap-content-cell">
-              Existing FANET routing protocols lack safe exploration guardrails, resulting in severe packet delays when exploring degraded links under 3D mobility.
-            </div>
-            <div class="gap-content-cell">
-              <ul style="list-style: disc inside; display: flex; flex-direction: column; gap: 14px;">
-                <li>Implemented RLFR protocol from IEEE TCOMM 2024</li>
-                <li>Combined safe risk table with power control</li>
-                <li>Full 10-protocol benchmark in UavNetSim</li>
-              </ul>
-            </div>
-          </div>
+          <p style="font-family: 'Lora', serif; font-size: 23px; color: #475569; line-height: 1.5;">
+            &beta; = 0.8 enables rapid exponential smoothing to detect fading channels instantly.
+          </p>
         </div>
       </div>
 
-      <div style="font-family: 'Lora', serif; font-size: 24px; color: #475569;">
-        IEEE TCOMM 2024 [1] | Q-FANET [2] | UavNetSim Architecture [3]
+      <div style="flex: 0.9; background: #2D3748; color: #fff; border-radius: 24px; padding: 40px; display: flex; flex-direction: column; justify-content: center;">
+        <div style="font-size: 32px; font-weight: 700; color: var(--gold); margin-bottom: 18px;">Why Safe Exploration is Essential</div>
+        <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 24px; line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
+          <li><strong>No Blind Exploration:</strong> Unlike &epsilon;-greedy, RLFR never explores links that risk breaching the 40 ms deadline.</li>
+          <li><strong>Real-Time Adaptation:</strong> If a drone moves behind an obstacle, its R(s,a) jumps to 1.0, and the policy immediately switches to an alternate path.</li>
+          <li><strong>Guaranteed QoS:</strong> Mission-critical video and telemetry stay within delay tolerances.</li>
+        </ul>
       </div>
     </div>
     <div class="slide-number">6</div>
   </section>
 
   <!-- ========================================== -->
-  <!-- SLIDE 7: SIMULATION ENVIRONMENT & SETUP    -->
+  <!-- SLIDE 7: MATH FORMULATION III - BELLMAN    -->
   <!-- ========================================== -->
-  <section class="slide" id="slide-7">
-    <div class="dataset-layout">
-      <div class="dataset-left">
-        <h1 class="slide-main-title" style="font-size: 70px; margin-bottom: 0;">Simulation<br>Parameters</h1>
+  <section class="slide" style="padding: 80px 100px;" id="slide-7">
+    <h1 class="slide-main-title">Distributed Bellman Update with Shared Experience</h1>
 
-        <div class="dataset-overview-card">
-          <div style="font-size: 32px; font-weight: 700; margin-bottom: 16px;">Simulation Overview</div>
-          <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 24px; line-height: 1.6;">
-            <li>Mobility Model: Gauss-Markov 3D</li>
-            <li>Number of UAVs: 10 Nodes</li>
-            <li>UAV Speed: 10 m/s</li>
-            <li>MAC Layer: CSMA/CA with 802.11 backoff</li>
-            <li>Radio Channel: 2.4 GHz, Friis/Rayleigh model</li>
-          </ul>
-        </div>
+    <div class="dashed-card-container" style="margin: 30px 0;">
+      <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 12px;">Distributed Bellman Equation (Equation 4)</div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 34px; font-weight: 700; color: #0284C7; margin-bottom: 14px;">
+        Q(s,a) &larr; (1 &minus; &alpha;)&middot;Q(s,a) + &alpha; [ u + &lambda;&middot;max Q(s&prime;, &acirc;) + &upsilon;&middot;&Sigma; V<sub>j</sub>(s<sub>j</sub>) ]
+      </div>
+      <p style="font-family: 'Lora', serif; font-size: 24px; color: #475569; line-height: 1.5;">
+        Hyperparameters: Learning rate &alpha; = 0.70, Discount factor &lambda; = 0.90, Shared experience weight &upsilon; = 0.05.
+      </p>
+    </div>
 
-        <div class="dataset-challenges-card">
-          <div style="font-size: 30px; font-weight: 700; color: #1E293B; margin-bottom: 12px;">FANET Challenges</div>
-          <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 24px; line-height: 1.5; color: #334155;">
-            <li>High relative speed causing link decay</li>
-            <li>Sparse connectivity &amp; intermittent radio contact</li>
-            <li>Strict packet latency deadlines (40 ms threshold)</li>
-          </ul>
-        </div>
+    <div style="display: flex; gap: 40px;">
+      <div style="flex: 1; background: #F4EBE1; border-radius: 24px; padding: 34px 40px;">
+        <div style="font-size: 28px; font-weight: 700; color: #1E293B; margin-bottom: 10px;">Beacon Value Piggybacking</div>
+        <p style="font-family: 'Lora', serif; font-size: 23px; line-height: 1.5; color: #334155;">
+          Every UAV calculates its local value function <span style="font-family: monospace; font-weight: bold;">V<sub>j</sub>(s<sub>j</sub>) = max Q(s<sub>j</sub>, a)</span> and embeds it into periodic 0.5 s HELLO beacons.
+        </p>
+        <p style="font-family: 'Lora', serif; font-size: 21px; color: #0284C7; font-weight: 600; margin-top: 10px;">
+          Zero extra protocol messages; fully decentralized.
+        </p>
       </div>
 
-      <div class="dataset-right">
-        <table class="custom-dashed-table">
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Value</th>
-              <th>Unit / Mode</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Simulation Time</td>
-              <td>10.0</td>
-              <td>Seconds</td>
-            </tr>
-            <tr>
-              <td>Airspace Volume</td>
-              <td>1000 &times; 1000 &times; 100</td>
-              <td>Meters (3D)</td>
-            </tr>
-            <tr>
-              <td>Packet Size</td>
-              <td>1024</td>
-              <td>Bytes</td>
-            </tr>
-            <tr>
-              <td>Transmit Power</td>
-              <td>25 / 50 / 75 / 100</td>
-              <td>mW (Adaptive)</td>
-            </tr>
-            <tr>
-              <td>QoS Delay Limit (&mu;)</td>
-              <td>40.0</td>
-              <td>Milliseconds</td>
-            </tr>
-            <tr>
-              <td>Random Seed</td>
-              <td>2025</td>
-              <td>Reproducible</td>
-            </tr>
-          </tbody>
-        </table>
-        <div style="text-align: center; margin-top: 24px; font-family: 'Lora', serif; font-size: 24px; color: #475569;">
-          Environment: UavNetSim SimPy Discrete-Event Engine
-        </div>
+      <div style="flex: 1; background: var(--dark-green); color: #fff; border-radius: 24px; padding: 34px 40px;">
+        <div style="font-size: 28px; font-weight: 700; color: var(--gold); margin-bottom: 10px;">Fast Cooperative Convergence</div>
+        <p style="font-family: 'Lora', serif; font-size: 23px; line-height: 1.5;">
+          Instead of waiting for ACKs from the destination, a relay immediately learns from its neighbors' evaluated state values via <span style="font-family: monospace; font-weight: bold;">&upsilon;&middot;&Sigma; V<sub>j</sub></span>.
+        </p>
       </div>
     </div>
     <div class="slide-number">7</div>
   </section>
 
   <!-- ========================================== -->
-  <!-- SLIDE 8: METHODOLOGY & PIPELINE FLOWCHART  -->
+  <!-- SLIDE 8: CODE ARCHITECTURE IN UAVNETSIM    -->
   <!-- ========================================== -->
-  <section class="slide" style="padding: 70px 100px;" id="slide-8">
-    <h1 class="slide-main-title" style="font-size: 68px; margin-bottom: 30px;">RLFR Routing Pipeline Architecture</h1>
+  <section class="slide" style="padding: 80px 100px;" id="slide-8">
+    <h1 class="slide-main-title">Code Implementation Architecture in UavNetSim</h1>
 
-    <!-- Process Flow Pills -->
-    <div class="flow-row">
-      <div class="flow-pill">Data Packet In</div>
-      <div class="flow-arrow"></div>
-      <div class="flow-pill">Neighbor Beacons (V_j)</div>
-      <div class="flow-arrow"></div>
-      <div class="flow-pill">Safe Boltzmann Selection</div>
-      <div class="flow-arrow"></div>
-      <div class="flow-pill">Power Level Assignment</div>
-      <div class="flow-arrow"></div>
-      <div class="flow-pill">CSMA/CA Dispatch</div>
-    </div>
-
-    <!-- Table of State Space Features & Explanatory Card -->
-    <div style="display: flex; gap: 50px; margin-top: 40px;">
-      <div style="flex: 1.1;">
-        <table class="custom-dashed-table">
-          <thead>
-            <tr>
-              <th>State Variable</th>
-              <th>Symbol</th>
-              <th>Information Captured</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Battery Level</td>
-              <td>b</td>
-              <td>Residual energy on candidate relay node</td>
-            </tr>
-            <tr>
-              <td>Channel Quality</td>
-              <td>&xi;</td>
-              <td>Received SNR &amp; channel path loss</td>
-            </tr>
-            <tr>
-              <td>Hop Count</td>
-              <td>&varrho;</td>
-              <td>Accumulated hops traversed so far</td>
-            </tr>
-            <tr>
-              <td>One-Hop Latency</td>
-              <td>t</td>
-              <td>Average queuing and MAC transmission delay</td>
-            </tr>
-            <tr>
-              <td>Neighbor Density</td>
-              <td>&varpi;</td>
-              <td>Active 1-hop neighbor count</td>
-            </tr>
-          </tbody>
-        </table>
+    <div style="display: flex; gap: 50px; margin-top: 30px;">
+      <div style="flex: 1.1; background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 36px 44px;">
+        <div style="font-size: 30px; font-weight: 800; color: #0284C7; margin-bottom: 16px;">Package: <code>routing/rlfr/</code></div>
+        <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 24px; line-height: 1.6; display: flex; flex-direction: column; gap: 14px;">
+          <li><strong><code>rlfr_packet.py</code></strong>:
+            <br>&nbsp;&nbsp;• <code>RLFRHelloPacket</code>: Beacons coordinates, battery, and V(s).
+            <br>&nbsp;&nbsp;• <code>RLFRAckPacket</code>: Carries &kappa;, delay &tau;, and link SNR &xi;.
+          </li>
+          <li><strong><code>rlfr_table.py</code></strong>:
+            <br>&nbsp;&nbsp;• Implements Q-table, Risk-table R(s,a), and loop cache &Omega;.
+            <br>&nbsp;&nbsp;• Computes safe Boltzmann exploration policy.
+          </li>
+          <li><strong><code>rlfr.py</code></strong>:
+            <br>&nbsp;&nbsp;• Protocol controller: packet queuing, CSMA/CA scheduling, and Bellman updates.
+          </li>
+        </ul>
       </div>
 
-      <div style="flex: 0.9; background: #2D3748; color: #fff; border-radius: 24px; padding: 40px; display: flex; flex-direction: column; justify-content: center;">
-        <div style="font-size: 32px; font-weight: 700; color: var(--gold); margin-bottom: 18px;">Key Design Elements</div>
-        <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 25px; line-height: 1.6; display: flex; flex-direction: column; gap: 14px;">
-          <li>Joint action selects next-hop drone + relay power</li>
-          <li>Loop Avoidance Cache (&Omega;) instantly drops duplicate packets</li>
-          <li>Dual-table formulation: Q-table for utility, R-table for latency risk</li>
-        </ul>
+      <div style="flex: 0.9; display: flex; flex-direction: column; gap: 24px;">
+        <div style="background: var(--dark-green); color: #fff; border-radius: 24px; padding: 32px 40px;">
+          <div style="font-size: 28px; font-weight: 700; color: var(--gold); margin-bottom: 10px;">Simulator Integration</div>
+          <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 23px; line-height: 1.5; display: flex; flex-direction: column; gap: 8px;">
+            <li><code>entities/drone.py</code>: Registered in protocol factory map.</li>
+            <li><code>routing/parameters.py</code>: Configured paper hyperparameters.</li>
+            <li><code>main.py</code> CLI: Executable via <code>--routing RLFR</code>.</li>
+            <li>3D Web UI: Interactive selection at <code>localhost:8000</code>.</li>
+          </ul>
+        </div>
+
+        <div style="background: #F4EBE1; border-radius: 24px; padding: 32px 40px;">
+          <div style="font-size: 28px; font-weight: 700; color: #1E293B; margin-bottom: 10px;">Clean Interoperability</div>
+          <p style="font-family: 'Lora', serif; font-size: 23px; line-height: 1.5; color: #334155;">
+            Shares the exact same SimPy environment, CSMA/CA MAC, and physical channel models as the other 9 protocols for zero-bias benchmarking.
+          </p>
+        </div>
       </div>
     </div>
     <div class="slide-number">8</div>
   </section>
 
   <!-- ========================================== -->
-  <!-- SLIDE 9: MATH I - UTILITY & POWER CONTROL  -->
+  <!-- SLIDE 9: EMPIRICAL BENCHMARK SCORECARD     -->
   <!-- ========================================== -->
-  <section class="slide" style="padding: 80px 100px;" id="slide-9">
-    <h1 class="slide-main-title" style="font-size: 68px;">Mathematical Formulation: Utility &amp; Power</h1>
-    
-    <div style="display: flex; gap: 60px; margin-top: 40px;">
-      <div style="flex: 1.1;">
-        <div style="background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 40px; margin-bottom: 30px;">
-          <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 14px;">Multi-Objective Utility (Equation 3)</div>
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 38px; font-weight: 700; color: #0284C7; margin-bottom: 16px;">
-            u<sup>(k)</sup> = &kappa; &minus; c<sub>1</sub>&middot;&tau; &minus; c<sub>2</sub>&middot;w
-          </div>
-          <p style="font-family: 'Lora', serif; font-size: 24px; color: #475569; line-height: 1.5;">
-            Directly unifies packet delivery reward with latency and transmission power penalties.
-          </p>
-        </div>
+  <section class="slide" style="padding: 60px 100px;" id="slide-9">
+    <h1 class="slide-main-title" style="font-size: 68px; margin-bottom: 20px;">Final Test Performance of All 10 Protocols</h1>
 
-        <table class="custom-dashed-table">
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Paper Value</th>
-              <th>Significance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Delivery (&kappa;)</td>
-              <td>1 or 0</td>
-              <td>Destination ACK indicator</td>
-            </tr>
-            <tr>
-              <td>Latency (&tau;)</td>
-              <td>c<sub>1</sub> = 0.8</td>
-              <td>Normalized end-to-end packet delay</td>
-            </tr>
-            <tr>
-              <td>Energy (w)</td>
-              <td>c<sub>2</sub> = 0.6</td>
-              <td>Transmit energy: p &middot; (z / r)</td>
-            </tr>
-          </tbody>
-        </table>
+    <table class="canva-benchmark-table">
+      <thead>
+        <tr>
+          <th>Protocol</th>
+          <th>Delivery Ratio (%)</th>
+          <th>E2E Delay (ms)</th>
+          <th>Average Hops</th>
+          <th>Throughput (Kbps)</th>
+          <th>MAC Delay (ms)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Greedy</td><td>91.47%</td><td>100.16 ms</td><td>1.47</td><td>1413.1</td><td>26.70 ms</td></tr>
+        <tr><td>DSDV</td><td>97.01%</td><td>15.59 ms</td><td>1.52</td><td>1366.4</td><td>5.99 ms</td></tr>
+        <tr><td>GRAD</td><td>90.83%</td><td>7.42 ms</td><td>1.00</td><td>1444.2</td><td>0.00 ms</td></tr>
+        <tr><td>OPAR</td><td>59.91%</td><td>8.79 ms</td><td>1.34</td><td>1417.8</td><td>13.82 ms</td></tr>
+        <tr><td>QRouting</td><td>82.94%</td><td>17.36 ms</td><td>2.38</td><td>1012.7</td><td>11.54 ms</td></tr>
+        <tr><td>QFANET</td><td>91.26%</td><td>91.74 ms</td><td>2.31</td><td>919.7</td><td>9.39 ms</td></tr>
+        <tr><td>QGeo</td><td>88.27%</td><td>22.22 ms</td><td>2.71</td><td>821.7</td><td>14.15 ms</td></tr>
+        <tr><td>QMR</td><td>78.89%</td><td>15.56 ms</td><td>2.45</td><td>875.9</td><td>12.83 ms</td></tr>
+        <tr><td>Baseline_DRL</td><td>91.47%</td><td>100.16 ms</td><td>1.47</td><td>1413.1</td><td>26.70 ms</td></tr>
+        <tr class="highlight-rlfr">
+          <td><strong>RLFR (10th)</strong></td>
+          <td><strong>81.45%</strong></td>
+          <td><strong>16.47 ms</strong></td>
+          <td><strong>2.45</strong></td>
+          <td><strong>891.4</strong></td>
+          <td><strong>7.45 ms</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display: flex; gap: 40px; margin-top: 24px; align-items: center;">
+      <div style="flex: 1.2; font-size: 26px; font-family: 'Lora', serif; color: #1E293B;">
+        <strong>Best delay among RL models:</strong> [RLFR - 16.47 ms]<br>
+        <strong>Latency reduction vs Q-FANET:</strong> [> 5.5&times; faster] &nbsp;|&nbsp; <strong>Vs Baseline DRL:</strong> [> 6.0&times; faster]
       </div>
-
-      <div style="flex: 0.9; display: flex; flex-direction: column; gap: 30px; justify-content: center;">
-        <div style="background: #F4EBE1; border-radius: 24px; padding: 36px 44px;">
-          <div style="font-size: 32px; font-weight: 700; color: #1E293B; margin-bottom: 12px;">Relay Power Action Space</div>
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 28px; color: #0284C7; margin-bottom: 14px;">
-            a = (next_hop, p), &nbsp; p &isin; {25, 50, 75, 100} mW
-          </div>
-          <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.5; color: #334155;">
-            By allowing drones to dial down power when the neighbor is close, RLFR saves up to 45% communication energy while curbing interference.
-          </p>
-        </div>
-
-        <div style="background: var(--dark-green); color: #fff; border-radius: 24px; padding: 36px 44px;">
-          <div style="font-size: 30px; font-weight: 700; color: var(--gold); margin-bottom: 10px;">Why Single-Objective Fails</div>
-          <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.5;">
-            Optimizing only for hops (like Greedy) selects distant, high-BER links that cause retransmissions. RLFR's joint utility prevents this trade-off.
-          </p>
-        </div>
+      <div style="flex: 0.8; background: var(--dark-green); color: #fff; border-radius: 16px; padding: 18px 24px; font-size: 22px; font-family: 'Lora', serif;">
+        Identical Conditions: 10 UAVs &middot; Gauss-Markov 3D &middot; CSMA/CA &middot; Seed 2025
       </div>
     </div>
     <div class="slide-number">9</div>
   </section>
 
   <!-- ========================================== -->
-  <!-- SLIDE 10: MATH II - SAFE BOLTZMANN POLICY  -->
+  <!-- SLIDE 10: CLOSING THANK YOU SLIDE          -->
   <!-- ========================================== -->
-  <section class="slide" style="padding: 80px 100px;" id="slide-10">
-    <h1 class="slide-main-title" style="font-size: 68px;">Mathematical Formulation: Safe Exploration</h1>
-
-    <div style="display: flex; gap: 60px; margin-top: 40px;">
-      <div style="flex: 1.1;">
-        <div style="background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 40px; margin-bottom: 30px;">
-          <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 14px;">Safe Boltzmann Policy (Equation 2)</div>
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 34px; font-weight: 700; color: #0284C7; margin-bottom: 16px;">
-            &pi;(s, a) = exp(Q(s,a) &minus; c&middot;R(s,a)) / &Sigma; exp(...)
-          </div>
-          <p style="font-family: 'Lora', serif; font-size: 24px; color: #475569; line-height: 1.5;">
-            The risk penalty <strong style="color: #E11D48;">c &middot; R(s, a)</strong> lowers exploration probability for actions that historically breach latency deadlines.
-          </p>
-        </div>
-
-        <div style="background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 40px;">
-          <div style="font-size: 28px; font-weight: 800; color: #1E293B; margin-bottom: 14px;">Risk Table Update (Equations 5 &amp; 6)</div>
-          <div style="font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; color: #0284C7; margin-bottom: 16px;">
-            l<sup>(k)</sup> = <b>1</b>(&tau; &gt; &mu;) &nbsp; [&mu; = 40 ms]<br>
-            R(s,a) &larr; (1 &minus; &beta;)&middot;R(s,a) + &beta;&middot;l<sup>(k)</sup>
-          </div>
-          <p style="font-family: 'Lora', serif; font-size: 24px; color: #475569; line-height: 1.5;">
-            &beta; = 0.8 ensures swift exponential adaptation when a path suffers congestion.
-          </p>
-        </div>
-      </div>
-
-      <div style="flex: 0.9; background: #2D3748; color: #fff; border-radius: 24px; padding: 44px; display: flex; flex-direction: column; justify-content: center;">
-        <div style="font-size: 34px; font-weight: 700; color: var(--gold); margin-bottom: 20px;">Why Safe Exploration Matters</div>
-        <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 26px; line-height: 1.6; display: flex; flex-direction: column; gap: 18px;">
-          <li><strong>Zero Blind Exploration:</strong> Unlike classical &epsilon;-greedy, RLFR never blindly tries risky, failing links.</li>
-          <li><strong>QoS Preservation:</strong> Critical sensor telemetry stays under the 40 ms deadline threshold.</li>
-          <li><strong>Smooth Convergence:</strong> Prevents exploration oscillations in volatile 3D airspace.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="slide-number">10</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 11: DISTRIBUTED BELLMAN UPDATES      -->
-  <!-- ========================================== -->
-  <section class="slide" style="padding: 80px 100px;" id="slide-11">
-    <h1 class="slide-main-title" style="font-size: 68px;">Distributed Bellman Updates &amp; Loop Cache</h1>
-
-    <div style="background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 40px; margin: 40px 0;">
-      <div style="font-size: 30px; font-weight: 800; color: #1E293B; margin-bottom: 14px;">Distributed Bellman Equation (Equation 4)</div>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 700; color: #0284C7; margin-bottom: 16px;">
-        Q(s,a) &larr; (1 &minus; &alpha;)&middot;Q(s,a) + &alpha; [ u + &lambda;&middot;max Q(s&prime;, &acirc;) + &upsilon;&middot;&Sigma; V<sub>j</sub>(s<sub>j</sub>) ]
-      </div>
-      <p style="font-family: 'Lora', serif; font-size: 25px; color: #475569; line-height: 1.5;">
-        Hyperparameters: Learning rate &alpha; = 0.70, Discount factor &lambda; = 0.90, Shared experience weight &upsilon; = 0.05.
-      </p>
-    </div>
-
-    <div style="display: flex; gap: 50px;">
-      <div style="flex: 1; background: #F4EBE1; border-radius: 24px; padding: 36px 44px;">
-        <div style="font-size: 30px; font-weight: 700; color: #1E293B; margin-bottom: 12px;">Beacon Value Piggybacking</div>
-        <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.5; color: #334155;">
-          Each UAV broadcasts its state-value <span style="font-family: monospace; font-weight: bold;">V<sub>j</sub>(s<sub>j</sub>) = max Q(s<sub>j</sub>, a)</span> inside routine 0.5 s HELLO beacons. No additional control messages are introduced.
-        </p>
-      </div>
-
-      <div style="flex: 1; background: var(--dark-green); color: #fff; border-radius: 24px; padding: 36px 44px;">
-        <div style="font-size: 30px; font-weight: 700; color: var(--gold); margin-bottom: 12px;">Loop Avoidance Cache (&Omega;)</div>
-        <p style="font-family: 'Lora', serif; font-size: 24px; line-height: 1.5;">
-          Nodes record <span style="font-family: monospace; font-weight: bold;">(source_id, packet_id)</span> tuples in cache &Omega;. Any duplicate arrival is immediately dropped, eliminating routing loops and broadcast storms.
-        </p>
-      </div>
-    </div>
-    <div class="slide-number">11</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 12: FINAL TEST PERFORMANCE (TABLE)   -->
-  <!-- ========================================== -->
-  <section class="slide" id="slide-12">
-    <div class="table-benchmark-container">
-      <h1 class="slide-main-title" style="font-size: 72px; margin-bottom: 24px;">Final Test Performance of All 10 Protocols</h1>
-
-      <table class="canva-benchmark-table">
-        <thead>
-          <tr>
-            <th>Model</th>
-            <th>Delivery Ratio (%)</th>
-            <th>E2E Delay (ms)</th>
-            <th>Average Hops</th>
-            <th>Throughput (Kbps)</th>
-            <th>MAC Delay (ms)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Greedy</td><td>91.47%</td><td>100.16 ms</td><td>1.47</td><td>1413.1</td><td>26.70 ms</td></tr>
-          <tr><td>DSDV</td><td>97.01%</td><td>15.59 ms</td><td>1.52</td><td>1366.4</td><td>5.99 ms</td></tr>
-          <tr><td>GRAD</td><td>90.83%</td><td>7.42 ms</td><td>1.00</td><td>1444.2</td><td>0.00 ms</td></tr>
-          <tr><td>OPAR</td><td>59.91%</td><td>8.79 ms</td><td>1.34</td><td>1417.8</td><td>13.82 ms</td></tr>
-          <tr><td>QRouting</td><td>82.94%</td><td>17.36 ms</td><td>2.38</td><td>1012.7</td><td>11.54 ms</td></tr>
-          <tr><td>QFANET</td><td>91.26%</td><td>91.74 ms</td><td>2.31</td><td>919.7</td><td>9.39 ms</td></tr>
-          <tr><td>QGeo</td><td>88.27%</td><td>22.22 ms</td><td>2.71</td><td>821.7</td><td>14.15 ms</td></tr>
-          <tr><td>QMR</td><td>78.89%</td><td>15.56 ms</td><td>2.45</td><td>875.9</td><td>12.83 ms</td></tr>
-          <tr><td>Baseline_DRL</td><td>91.47%</td><td>100.16 ms</td><td>1.47</td><td>1413.1</td><td>26.70 ms</td></tr>
-          <tr class="highlight-rlfr">
-            <td><strong>RLFR (10th)</strong></td>
-            <td><strong>81.45%</strong></td>
-            <td><strong>16.47 ms</strong></td>
-            <td><strong>2.45</strong></td>
-            <td><strong>891.4</strong></td>
-            <td><strong>7.45 ms</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="table-callout-box">
-        <strong>Best delay among RL models:</strong> [RLFR - 16.47 ms]<br>
-        <strong>Latency reduction vs Q-FANET:</strong> [> 5.5&times; faster] &nbsp;|&nbsp; <strong>Vs Baseline DRL:</strong> [> 6.0&times; faster]
-      </div>
-    </div>
-    <div class="slide-number">12</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 13: BAR CHART PERFORMANCE            -->
-  <!-- ========================================== -->
-  <section class="slide" id="slide-13">
-    <div class="chart-slide-layout">
-      <div class="chart-canvas-box">
-        <div style="font-family: 'Lora', serif; font-size: 26px; font-weight: 700; color: #1E293B; margin-bottom: 20px; text-align: center;">
-          Latency Comparison: End-to-End Delay Across Protocols (ms)
-        </div>
-        <!-- Clean SVG Bar Chart -->
-        <svg viewBox="0 0 700 400" width="100%" height="340">
-          <line x1="60" y1="340" x2="680" y2="340" stroke="#94A3B8" stroke-width="2" />
-          <line x1="60" y1="40" x2="60" y2="340" stroke="#94A3B8" stroke-width="2" />
-          
-          <!-- Y grid lines -->
-          <line x1="60" y1="265" x2="680" y2="265" stroke="#E2E8F0" stroke-width="1" />
-          <text x="30" y="270" font-size="14" fill="#64748B">25 ms</text>
-          
-          <line x1="60" y1="190" x2="680" y2="190" stroke="#E2E8F0" stroke-width="1" />
-          <text x="30" y="195" font-size="14" fill="#64748B">50 ms</text>
-
-          <line x1="60" y1="115" x2="680" y2="115" stroke="#E2E8F0" stroke-width="1" />
-          <text x="30" y="120" font-size="14" fill="#64748B">75 ms</text>
-
-          <line x1="60" y1="40" x2="680" y2="40" stroke="#E2E8F0" stroke-width="1" />
-          <text x="25" y="45" font-size="14" fill="#64748B">100 ms</text>
-
-          <!-- Bars -->
-          <!-- Greedy: 100.16 ms -->
-          <rect x="80" y="40" width="45" height="300" fill="#E2E8F0" rx="4" />
-          <text x="102" y="360" font-size="12" font-weight="600" text-anchor="middle" fill="#475569">Greedy</text>
-          <text x="102" y="32" font-size="12" font-weight="bold" text-anchor="middle" fill="#1E293B">100.1</text>
-
-          <!-- DSDV: 15.59 ms -->
-          <rect x="140" y="293" width="45" height="47" fill="#E2E8F0" rx="4" />
-          <text x="162" y="360" font-size="12" font-weight="600" text-anchor="middle" fill="#475569">DSDV</text>
-          <text x="162" y="285" font-size="12" font-weight="bold" text-anchor="middle" fill="#1E293B">15.6</text>
-
-          <!-- QRouting: 17.36 ms -->
-          <rect x="200" y="288" width="45" height="52" fill="#E2E8F0" rx="4" />
-          <text x="222" y="360" font-size="12" font-weight="600" text-anchor="middle" fill="#475569">QRoute</text>
-          <text x="222" y="280" font-size="12" font-weight="bold" text-anchor="middle" fill="#1E293B">17.4</text>
-
-          <!-- QFANET: 91.74 ms -->
-          <rect x="260" y="65" width="45" height="275" fill="#F87171" rx="4" />
-          <text x="282" y="360" font-size="12" font-weight="600" text-anchor="middle" fill="#DC2626">QFANET</text>
-          <text x="282" y="57" font-size="12" font-weight="bold" text-anchor="middle" fill="#DC2626">91.7</text>
-
-          <!-- QGeo: 22.22 ms -->
-          <rect x="320" y="273" width="45" height="67" fill="#E2E8F0" rx="4" />
-          <text x="342" y="360" font-size="12" font-weight="600" text-anchor="middle" fill="#475569">QGeo</text>
-          <text x="342" y="265" font-size="12" font-weight="bold" text-anchor="middle" fill="#1E293B">22.2</text>
-
-          <!-- Baseline DRL: 100.16 ms -->
-          <rect x="380" y="40" width="45" height="300" fill="#F87171" rx="4" />
-          <text x="402" y="360" font-size="12" font-weight="600" text-anchor="middle" fill="#DC2626">DRL</text>
-          <text x="402" y="32" font-size="12" font-weight="bold" text-anchor="middle" fill="#DC2626">100.2</text>
-
-          <!-- RLFR: 16.47 ms (Highlighted) -->
-          <rect x="440" y="290" width="55" height="50" fill="#0284C7" rx="4" />
-          <text x="467" y="360" font-size="13" font-weight="800" text-anchor="middle" fill="#0284C7">RLFR</text>
-          <text x="467" y="280" font-size="14" font-weight="900" text-anchor="middle" fill="#0284C7">16.5 ms</text>
-        </svg>
-      </div>
-
-      <div class="chart-dark-bubble">
-        <div style="font-size: 38px; font-weight: 800; color: var(--gold); margin-bottom: 24px;">Best Latency Results</div>
-        <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 26px; line-height: 1.6; display: flex; flex-direction: column; gap: 16px;">
-          <li>RLFR cut end-to-end latency to <strong>16.47 ms</strong>.</li>
-          <li>Avoided high-delay traps that plagued Q-FANET (91.74 ms).</li>
-          <li>Safe exploration suppressed unstable 3D links before packets entered MAC queues.</li>
-          <li>Low MAC delay of only <strong>7.45 ms</strong>.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="slide-number">13</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 14: ERROR & FAILURE ANALYSIS         -->
-  <!-- ========================================== -->
-  <section class="slide" style="padding: 70px 100px;" id="slide-14">
-    <h1 class="slide-main-title" style="font-size: 72px; margin-bottom: 30px;">Error Analysis &amp; Packet Drop Mechanics</h1>
-
-    <div style="display: flex; gap: 60px;">
-      <div style="flex: 1.1;">
-        <table class="custom-dashed-table">
-          <thead>
-            <tr>
-              <th>Failure Mode</th>
-              <th>Cause in 3D FANETs</th>
-              <th>RLFR Mitigation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Routing Voids</td>
-              <td>Greedy forwarding hits physical dead ends</td>
-              <td>Safe exploration routes around void nodes</td>
-            </tr>
-            <tr>
-              <td>MAC Collisions</td>
-              <td>Hidden terminals &amp; simultaneous broadcast</td>
-              <td>Power control shrinks interference footprint</td>
-            </tr>
-            <tr>
-              <td>TTL Expiry</td>
-              <td>Cyclic packet loops in dynamic meshes</td>
-              <td>Loop Cache &Omega; drops duplicate copies instantly</td>
-            </tr>
-            <tr>
-              <td>Link Degradation</td>
-              <td>Rapid UAV separation causing packet drops</td>
-              <td>R(s,a) detects breaches &amp; penalizes decaying links</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div style="flex: 0.9; background: #FAF5EE; border: 3px dashed #1E293B; border-radius: 24px; padding: 40px; display: flex; flex-direction: column; justify-content: center;">
-        <div style="font-size: 32px; font-weight: 800; color: #1E293B; margin-bottom: 16px;">Empirical Findings</div>
-        <p style="font-family: 'Lora', serif; font-size: 25px; line-height: 1.6; color: #334155; margin-bottom: 20px;">
-          In Greedy and GRAD, MAC contention caused over <strong>2,100 collisions</strong>. RLFR curbed collisions down to <strong>616</strong> by dynamically tuning power levels and rejecting congested relays.
-        </p>
-        <div style="font-family: 'Lora', serif; font-size: 24px; color: #0284C7; font-weight: 600;">
-          Result: High PDR (81.45%) maintained under aggressive 10 m/s relative drone speeds.
-        </div>
-      </div>
-    </div>
-    <div class="slide-number">14</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 15: LIMITATIONS OF THE STUDY         -->
-  <!-- ========================================== -->
-  <section class="slide" style="padding: 70px 100px;" id="slide-15">
-    <div style="text-align: center; margin-bottom: 30px;">
-      <h1 class="slide-main-title" style="font-size: 72px; letter-spacing: 2px;">LIMITATIONS OF THE STUDY</h1>
-    </div>
-
-    <table class="limitations-table">
-      <thead>
-        <tr>
-          <th>Limitation</th>
-          <th>Effect on the Study</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Online training duration was constrained to 10-second simulation runs</td>
-          <td>Q-table and Risk-table are still in early convergence; longer runs (60s+) achieve higher PDR</td>
-        </tr>
-        <tr>
-          <td>Evaluated on a 10-UAV swarm topology</td>
-          <td>Performance on massive-scale swarms (&gt; 50 UAVs) requires hierarchical clustering</td>
-        </tr>
-        <tr>
-          <td>Gauss-Markov 3D was the primary mobility model tested</td>
-          <td>Path predictability varies when drones follow mission waypoints vs random patrol</td>
-        </tr>
-        <tr>
-          <td>CSMA/CA MAC with fixed slot windows</td>
-          <td>Cross-layer TDMA integration could further eliminate packet collisions</td>
-        </tr>
-        <tr>
-          <td>Table-based RL (RLFR) evaluated rather than deep neural policy (DRLFR)</td>
-          <td>Discrete state discretization used; deep function approximation can generalize across continuous states</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="slide-number">15</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 16: CONCLUSION AND FUTURE WORK       -->
-  <!-- ========================================== -->
-  <section class="slide" style="padding: 80px 100px;" id="slide-16">
-    <div style="display: flex; gap: 80px; height: 100%;">
-      <div style="flex: 0.8; display: flex; flex-direction: column; justify-content: center;">
-        <h1 class="slide-main-title" style="font-size: 76px; line-height: 1.1;">
-          CONCLUSION<br>AND<br>FUTURE<br>WORK
-        </h1>
-      </div>
-
-      <div style="flex: 1.2; display: flex; flex-direction: column; justify-content: center; gap: 40px;">
-        <div style="background: #F4EBE1; border-radius: 24px; padding: 40px;">
-          <div style="font-size: 34px; font-weight: 800; color: #1E293B; margin-bottom: 16px;">Main Findings</div>
-          <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 25px; line-height: 1.55; color: #334155; display: flex; flex-direction: column; gap: 10px;">
-            <li>RLFR successfully deployed as 10th protocol in UavNetSim</li>
-            <li>Multi-objective reward prevents battery depletion</li>
-            <li>Safe Boltzmann exploration cut delay by 5.5&times; vs Q-FANET</li>
-            <li>Fully decentralized: zero infrastructure required</li>
-          </ul>
-        </div>
-
-        <div style="background: var(--lavender-card); border-radius: 24px; padding: 40px;">
-          <div style="font-size: 34px; font-weight: 800; color: #1E293B; margin-bottom: 16px;">Future Work</div>
-          <ul style="list-style: disc inside; font-family: 'Lora', serif; font-size: 25px; line-height: 1.55; color: #334155; display: flex; flex-direction: column; gap: 10px;">
-            <li>Implement Deep RLFR (DRLFR) with neural policy networks</li>
-            <li>Test multi-swarm scenarios with ground charging pads</li>
-            <li>Benchmark 5G NR aerial communication links</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="slide-number">16</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 17: REFERENCES                       -->
-  <!-- ========================================== -->
-  <section class="slide" style="padding: 80px 120px;" id="slide-17">
-    <!-- Top-left emblem -->
-    <svg class="decorative-corner" viewBox="0 0 100 100" style="left: 40px; top: 20px;">
-      <path d="M0,0 Q60,0 80,60 Q85,85 100,100 L0,100 Z" fill="#2E4032" />
-      <path d="M10,0 Q65,0 85,65 Q90,85 100,95" stroke="#F5B82E" stroke-width="8" fill="none" />
-    </svg>
-
-    <!-- Search Box Header (exact match to Canva ref) -->
-    <div class="ref-search-header">
-      <span style="font-size: 36px;">🔍</span>
-      <span style="font-family: 'Montserrat', sans-serif; font-size: 46px; font-weight: 900; letter-spacing: 4px; color: #1E293B;">REFERENCES</span>
-      <span style="font-size: 36px; font-weight: bold; color: #64748B;">✕</span>
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 40px;">
-      <div class="ref-card-item">
-        <div class="ref-badge">🔍 REFERENCES 1</div>
-        <div class="ref-text">[1] J. Li, L. Xiao, X. Qi, Z. Lv, Q. Chen, and Y.-J. Liu, "Reinforcement Learning Based Energy-Efficient Fast Routing for FANETs," IEEE Trans. Commun., vol. 72, no. 11, Nov. 2024.</div>
-      </div>
-
-      <div class="ref-card-item">
-        <div class="ref-badge">🔍 REFERENCES 2</div>
-        <div class="ref-text">[2] L. Xiao et al., "Q-FANET: Q-Learning-Based Adaptive Routing for Flying Ad-Hoc Networks," IEEE Access, 2020.</div>
-      </div>
-
-      <div class="ref-card-item">
-        <div class="ref-badge">🔍 REFERENCES 3</div>
-        <div class="ref-text">[3] Z. Zhou, "UavNetSim: An Integrated Discrete-Event Simulation Framework for UAV Networks," GitHub, 2025.</div>
-      </div>
-
-      <div class="ref-card-item">
-        <div class="ref-badge">🔍 REFERENCES 4</div>
-        <div class="ref-text">[4] C. E. Perkins and P. Bhagwat, "Highly Dynamic Destination-Sequenced Distance-Vector Routing (DSDV)," ACM SIGCOMM, 1994.</div>
-      </div>
-
-      <div class="ref-card-item">
-        <div class="ref-badge">🔍 REFERENCES 5</div>
-        <div class="ref-text">[5] Y. Zeng, J. Xu, and R. Zhang, "Energy Minimization for Wireless Communication with Rotary-wing UAV," IEEE TWC, 2019.</div>
-      </div>
-    </div>
-    <div class="slide-number">17</div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SLIDE 18: THANK YOU (CLOSING SLIDE)        -->
-  <!-- ========================================== -->
-  <section class="slide slide-closing" id="slide-18">
+  <section class="slide slide-closing" id="slide-10">
     <div class="closing-badge">
       <div class="closing-main-text">THANK YOU</div>
       <div class="closing-sub-text">Questions &amp; Discussion :)</div>
     </div>
-    <div class="slide-number" style="color: #fff;">18</div>
+    <div class="slide-number" style="color: #fff;">10</div>
   </section>
 
 </div>
 
 <script>
   let currentSlide = 0;
-  const totalSlides = 18;
+  const totalSlides = 10;
   const counter = document.getElementById('navCounter');
 
   function updateSlide(idx) {
@@ -1663,7 +929,6 @@
     }
   });
 
-  // Track scroll position to update counter
   window.addEventListener('scroll', () => {
     const slides = document.querySelectorAll('.slide');
     const scrollPos = window.scrollY + (window.innerHeight / 2);
