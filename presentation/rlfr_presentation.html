@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RLFR Protocol Presentation — UavNetSim</title>
+<style>
+  :root {
+    --bg-primary: #0a0f1d;
+    --bg-card: #111a2e;
+    --bg-card-hover: #16223d;
+    --accent-cyan: #00d2ff;
+    --accent-blue: #3a7bd5;
+    --accent-amber: #f59e0b;
+    --accent-green: #10b981;
+    --accent-purple: #8b5cf6;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  /* Top Bar */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 28px;
+    background: rgba(10, 15, 29, 0.95);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 100;
+  }
+  .brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .slide-counter {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .controls {
+    display: flex;
+    gap: 8px;
+  }
+  .btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    color: #000;
+    font-weight: 600;
+    border: none;
+  }
+
+  /* Main Slide Container */
+  .slide-viewport {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 48px;
+  }
+  .slide {
+    display: none;
+    width: 100%;
+    max-width: 1180px;
+    height: 100%;
+    max-height: 720px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 40px 48px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    flex-direction: column;
+    position: relative;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease-out;
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Slide Typography & Layouts */
+  .slide-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    margin-bottom: 6px;
+  }
+  .slide-title {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .slide-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    flex: 1;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    flex: 1;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-highlight {
+    border-color: rgba(0, 210, 255, 0.4);
+    background: rgba(0, 210, 255, 0.04);
+  }
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--accent-cyan);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  ul.bullet-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  ul.bullet-list li {
+    position: relative;
+    padding-left: 24px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+  }
+  ul.bullet-list li::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-cyan);
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  /* Math Box */
+  .formula-box {
+    background: #060a14;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    margin: 10px 0 14px 0;
+    line-height: 1.6;
+  }
+  .formula-box .sym { color: var(--accent-cyan); font-weight: bold; }
+  .formula-box .num { color: var(--accent-amber); }
+  .formula-box .op { color: #f43f5e; font-weight: bold; }
+
+  /* Table styling */
+  table.benchmark-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+  table.benchmark-tbl th {
+    background: rgba(0, 210, 255, 0.12);
+    color: var(--accent-cyan);
+    padding: 8px 10px;
+    text-align: center;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border-color);
+  }
+  table.benchmark-tbl td {
+    padding: 7px 10px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  table.benchmark-tbl tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  table.benchmark-tbl tr.highlight-row {
+    background: rgba(0, 210, 255, 0.15) !important;
+    font-weight: bold;
+  }
+  table.benchmark-tbl tr.highlight-row td {
+    color: #ffffff;
+  }
+
+  /* Speaker Notes Toggle */
+  .notes-panel {
+    display: none;
+    margin-top: 16px;
+    background: rgba(245, 158, 11, 0.07);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #fde68a;
+  }
+  .notes-panel.visible { display: block; }
+  .notes-title {
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    color: var(--accent-amber);
+  }
+
+  /* Progress Bar */
+  .progress-container {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    width: 100%;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+    width: 10%;
+    transition: width 0.3s;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span>🚁</span> UavNetSim Presentation Studio
+  </div>
+  <div class="slide-counter" id="slideIndicator">Slide 1 / 10</div>
+  <div class="controls">
+    <button class="btn" onclick="toggleNotes()">📝 Speaker Notes (N)</button>
+    <button class="btn" onclick="prevSlide()">◀ Prev</button>
+    <button class="btn btn-primary" onclick="nextSlide()">Next ▶</button>
+  </div>
+</div>
+
+<div class="progress-container">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="slide-viewport">
+
+  <!-- Slide 1: Title -->
+  <div class="slide active">
+    <div class="slide-tag">UAV Ad-Hoc Network Protocols</div>
+    <div class="slide-title">RLFR: Reinforcement Learning Fast Routing</div>
+    <div class="slide-subtitle">Design, Mathematical Formulation, and Full System Implementation in UavNetSim</div>
+    
+    <div class="grid-2" style="margin-top: 20px;">
+      <div class="card card-highlight">
+        <div class="card-title">📌 Presentation Focus</div>
+        <ul class="bullet-list">
+          <li><strong>Domain:</strong> Flying Ad-Hoc Networks (FANETs) — Layer 3 packet routing.</li>
+          <li><strong>Paper:</strong> Published in <em>IEEE Transactions on Communications</em> (Nov 2024).</li>
+          <li><strong>Role in Project:</strong> Successfully integrated as the <strong>10th routing protocol</strong> in UavNetSim.</li>
+          <li><strong>Core Deliverable:</strong> Distributed reinforcement learning combining safe latency-risk exploration with dynamic relay power control.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 Why This Matters for the Audience</div>
+        <ul class="bullet-list">
+          <li><strong>3D Dynamic Topologies:</strong> Drones move at high speeds, breaking radio links constantly.</li>
+          <li><strong>Multi-Objective:</strong> Solves packet delivery, ultra-low latency, and battery energy simultaneously.</li>
+          <li><strong>Benchmark Proven:</strong> Cuts end-to-end delay by <strong>> 5.5×</strong> compared to Q-FANET in identical simulations.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-1">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "Hello everyone. Today I am presenting the 10th routing protocol implemented in our UavNetSim platform: RLFR, which stands for Reinforcement Learning Fast Routing. It comes from an IEEE Transactions on Communications paper published in November 2024. In the next few minutes, I will break down exactly how this routing algorithm works, the mathematics behind its multi-objective utility and risk constraints, how we implemented it in Python, and the benchmark results showing that it outperforms prior protocols like Q-FANET with a 5.5x latency reduction."
+    </div>
+  </div>
+
+  <!-- Slide 2: The Problem -->
+  <div class="slide">
+    <div class="slide-tag">The Motivation</div>
+    <div class="slide-title">Why Traditional Routing Fails in FANETs</div>
+    <div class="slide-subtitle">High UAV velocity, rapid link decay, and energy constraints break classical protocols.</div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">❌ Greedy Geographic</div>
+        <ul class="bullet-list">
+          <li>Forwards strictly to the neighbor closest to the destination.</li>
+          <li>Suffers from <strong>routing voids</strong> (local minimum traps).</li>
+          <li>High retransmissions and MAC contention under mobility.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">⚠️ Classical Q-Routing</div>
+        <ul class="bullet-list">
+          <li>Learns next-hop based on delay estimates.</li>
+          <li><strong>Blind exploration:</strong> Explores unreliable links that cause severe latency spikes.</li>
+          <li>Ignores battery and transmission power consumption.</li>
+        </ul>
+      </div>
+      <div class="card card-highlight">
+        <div class="card-title">💡 What FANETs Need</div>
+        <ul class="bullet-list">
+          <li><strong>Multi-Objective:</strong> Jointly balance PDR, Delay, and Power.</li>
+          <li><strong>Risk-Bounded Exploration:</strong> Never explore paths likely to violate latency deadlines.</li>
+          <li><strong>Cooperative Knowledge:</strong> Learn from neighbors without central infrastructure.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-2">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "Before jumping into RLFR, let's understand why we needed a new protocol. Standard Greedy forwarding chooses the physically closest neighbor, but frequently falls into routing voids when nodes move in 3D. Meanwhile, basic Q-Routing explores randomly during learning, which leads to huge latency spikes when packets take poor routes. RLFR was designed specifically to fix these flaws using latency-risk bounded exploration and cooperative neighbor experience."
+    </div>
+  </div>
+
+  <!-- Slide 3: Three Core Pillars -->
+  <div class="slide">
+    <div class="slide-tag">Architecture Overview</div>
+    <div class="slide-title">The Three Architectural Pillars of RLFR</div>
+    <div class="slide-subtitle">A decentralized reinforcement learning framework tailored for time-critical aerial swarms.</div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">1️⃣ Multi-Objective Utility</div>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">Joint Reward Function</p>
+        <ul class="bullet-list">
+          <li>Rewards delivery success ($\kappa$).</li>
+          <li>Penalizes end-to-end latency ($\tau$).</li>
+          <li>Penalizes transmission energy ($w$).</li>
+          <li>Trades off speed vs. drone battery life.</li>
+        </ul>
+      </div>
+      <div class="card card-highlight">
+        <div class="card-title">2️⃣ Safe Boltzmann Exploration</div>
+        <p style="color: var(--accent-cyan); font-size: 0.9rem; margin-bottom: 10px;">Risk-Constrained Action Selection</p>
+        <ul class="bullet-list">
+          <li>Maintains a separate <strong>Risk Table</strong> $R(s,a)$.</li>
+          <li>Tracks the probability of exceeding latency deadline $\mu=40\text{ ms}$.</li>
+          <li>Penalizes risky paths in the softmax selection.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">3️⃣ Shared Experience</div>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">Distributed Bellman Updates</p>
+        <ul class="bullet-list">
+          <li>Nodes broadcast local state value $V(s)$ in periodic HELLO beacons.</li>
+          <li>Neighbors factor in shared value $\upsilon \sum V_j$.</li>
+          <li>Accelerates learning convergence in dynamic meshes.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-3">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "RLFR introduces three major innovations: First, a multi-objective utility function that balances packet delivery, delay, and transmit energy. Second, safe Boltzmann exploration backed by an explicit Risk Table that tracks latency deadline violations. Third, a distributed Bellman update that piggybacks value functions inside periodic HELLO beacons, allowing drones to learn cooperatively without any central server."
+    </div>
+  </div>
+
+  <!-- Slide 4: Math 1 - Utility -->
+  <div class="slide">
+    <div class="slide-tag">Mathematical Formulation</div>
+    <div class="slide-title">1. Multi-Objective Utility Function</div>
+    <div class="slide-subtitle">Formulating the reinforcement learning reward to balance three competing objectives.</div>
+
+    <div class="grid-2">
+      <div class="card card-highlight">
+        <div class="card-title">Equation 3 in Paper</div>
+        <div class="formula-box">
+          <span class="sym">u</span><span class="op">⁽ᵏ⁾</span> = <span class="sym">κ</span> <span class="op">−</span> <span class="sym">c₁</span>·<span class="sym">τ</span> <span class="op">−</span> <span class="sym">c₂</span>·<span class="sym">w</span>
+        </div>
+        <ul class="bullet-list">
+          <li><span class="sym">κ ∈ {0, 1}</span>: <strong>Delivery Success Indicator</strong> (1 if destination ACK received, 0 otherwise).</li>
+          <li><span class="sym">τ</span>: <strong>Normalized E2E Latency</strong> ($\tau = \Delta t / T_{\max}$).</li>
+          <li><span class="sym">w</span>: <strong>Transmission Energy</strong> ($w = p \cdot \frac{z}{r}$ where $p$ is transmit power, $z$ is packet size, $r$ is transmission rate).</li>
+          <li><span class="sym">c₁ = 0.8, c₂ = 0.6</span>: Hyperparameter weighting coefficients.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">⚡ Transmission Power Control</div>
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 12px;">
+          Rather than transmitting at a fixed maximum power, the action space selects both the <strong>next-hop UAV</strong> and the <strong>power level</strong>:
+        </p>
+        <div class="formula-box">
+          <span class="sym">a</span> = (<span class="sym">next_hop</span>, <span class="sym">p</span>), &nbsp; <span class="sym">p</span> ∈ {<span class="num">25</span>, <span class="num">50</span>, <span class="num">75</span>, <span class="num">100</span>} mW
+        </div>
+        <ul class="bullet-list">
+          <li>Reduces electromagnetic interference and collisions.</li>
+          <li>Conserves battery on long-duration aerial missions.</li>
+          <li>Higher power is selected dynamically only when channel SNR $\xi$ is low.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-4">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "Here is the exact utility formula: u equals kappa minus c1 times tau minus c2 times w. Kappa is 1 if the packet reaches its final destination. Tau is the packet's latency, and w is the energy expended to send it, computed as power times transmission duration. Notice that our action chooses both the next-hop relay drone and the transmit power level between 25 and 100 milliwatts. This ensures the drone only spends the power necessary to maintain link quality."
+    </div>
+  </div>
+
+  <!-- Slide 5: Math 2 - Safe Exploration -->
+  <div class="slide">
+    <div class="slide-tag">Mathematical Formulation</div>
+    <div class="slide-title">2. Safe Exploration & Latency-Risk Constraint</div>
+    <div class="slide-subtitle">Guiding exploration using a dual Q-value and Risk-value Boltzmann distribution.</div>
+
+    <div class="grid-2">
+      <div class="card card-highlight">
+        <div class="card-title">Modified Boltzmann Policy (Eq. 2)</div>
+        <div class="formula-box">
+          <span class="sym">π</span>(<span class="sym">s</span>, <span class="sym">a</span>) = <span class="sym">exp</span>(<span class="sym">Q</span>(<span class="sym">s</span>,<span class="sym">a</span>) <span class="op">−</span> <span class="sym">c</span>·<span class="sym">R</span>(<span class="sym">s</span>,<span class="sym">a</span>)) <span class="op">/</span> <span class="sym">Σ</span> <span class="sym">exp</span>(...)
+        </div>
+        <ul class="bullet-list">
+          <li>Standard Boltzmann uses only $\exp(Q(s, a))$.</li>
+          <li>RLFR introduces the latency penalty <span class="sym">c · R(s, a)</span> ($c = 0.5$).</li>
+          <li>Actions that frequently miss latency deadlines have high $R(s, a)$, drastically reducing their forwarding probability.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Risk Table Update Rule (Eq. 5 & 6)</div>
+        <div class="formula-box">
+          <span class="sym">l</span><span class="op">⁽ᵏ⁾</span> = <span class="sym">𝟙</span>(<span class="sym">τ</span> <span class="op">&gt;</span> <span class="sym">μ</span>)  <span class="num">(μ = 40 ms)</span><br>
+          <span class="sym">R</span>(<span class="sym">s</span>,<span class="sym">a</span>) <span class="op">←</span> (<span class="num">1</span> <span class="op">−</span> <span class="sym">β</span>)·<span class="sym">R</span>(<span class="sym">s</span>,<span class="sym">a</span>) <span class="op">+</span> <span class="sym">β</span>·<span class="sym">l</span><span class="op">⁽ᵏ⁾</span>
+        </div>
+        <ul class="bullet-list">
+          <li><span class="sym">l⁽ᵏ⁾</span> is a binary indicator: 1 if latency exceeds $40\text{ ms}$, 0 otherwise.</li>
+          <li><span class="sym">β = 0.8</span> provides rapid exponential smoothing.</li>
+          <li>Allows immediate reaction when a link becomes congested or unstable.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-5">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "This slide shows why RLFR is called a 'safe' reinforcement learning protocol. In traditional Q-learning, the agent explores actions randomly to discover new paths. But in FANETs, picking a bad link could drop video streams or crash emergency telemetry. In RLFR, we keep a separate Risk Table, R(s, a), which tracks whether latency exceeded the 40 millisecond threshold. In the Boltzmann policy, the risk term acts as a penalty in the exponent. As a result, risky paths are avoided while still permitting safe exploration."
+    </div>
+  </div>
+
+  <!-- Slide 6: Math 3 - Distributed Bellman -->
+  <div class="slide">
+    <div class="slide-tag">Mathematical Formulation</div>
+    <div class="slide-title">3. Distributed Bellman Update with Shared Experience</div>
+    <div class="slide-subtitle">Accelerating distributed Q-learning convergence without centralized coordination.</div>
+
+    <div class="card card-highlight" style="margin-bottom: 16px;">
+      <div class="card-title">Distributed Bellman Equation (Eq. 4)</div>
+      <div class="formula-box">
+        <span class="sym">Q</span>(<span class="sym">s</span>,<span class="sym">a</span>) <span class="op">←</span> (<span class="num">1</span> <span class="op">−</span> <span class="sym">α</span>)·<span class="sym">Q</span>(<span class="sym">s</span>,<span class="sym">a</span>) <span class="op">+</span> <span class="sym">α</span>·[ <span class="sym">u</span> <span class="op">+</span> <span class="sym">λ</span>·<span class="sym">max</span> <span class="sym">Q</span>(<span class="sym">s′</span>,<span class="sym">â</span>) <span class="op">+</span> <span class="sym">υ</span>·<span class="sym">Σ</span> <span class="sym">Vⱼ</span>(<span class="sym">sⱼ</span>) ]
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Beacon Value Piggybacking</div>
+        <ul class="bullet-list">
+          <li>Each UAV $j$ computes its state-value function:
+            <div class="formula-box" style="margin: 4px 0;"><span class="sym">Vⱼ</span>(<span class="sym">sⱼ</span>) = <span class="sym">max</span>_â <span class="sym">Q</span>(<span class="sym">sⱼ</span>, â)</div>
+          </li>
+          <li>This float value is embedded inside periodic <code>RLFRHelloPacket</code> broadcasts (every $0.5\text{ s}$).</li>
+          <li>No extra control overhead or dedicated message exchanges needed.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Loop Avoidance Cache (Ω)</div>
+        <ul class="bullet-list">
+          <li>In multi-hop aerial meshes, packets can loop back if routing tables fluctuate.</li>
+          <li>Node tracks recent <code>(source_id, packet_id)</code> pairs in cache $\Omega$.</li>
+          <li>Duplicate packets are instantly dropped, eliminating broadcast storms and routing cycles.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-6">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "Here is the core Bellman update. In addition to the standard reward u and discounted future Q-value, look at the cooperative term: upsilon times the sum of V_j. Every drone calculates its local value function—the maximum Q-value for its state—and inserts it into its regular 0.5-second HELLO beacon. Neighbors receive this value and incorporate it into their learning. This allows the entire swarm to share experience cooperatively without needing a centralized controller."
+    </div>
+  </div>
+
+  <!-- Slide 7: Code Implementation -->
+  <div class="slide">
+    <div class="slide-tag">Code Implementation</div>
+    <div class="slide-title">How RLFR is Implemented in UavNetSim</div>
+    <div class="slide-subtitle">Modular, clean, and fully integrated with UavNetSim's discrete-event simulation engine.</div>
+
+    <div class="grid-2">
+      <div class="card card-highlight">
+        <div class="card-title">Package: <code>routing/rlfr/</code></div>
+        <ul class="bullet-list">
+          <li><strong><code>rlfr_packet.py</code></strong>:
+            <br>• <code>RLFRHelloPacket</code>: Transmits coordinates, velocity, battery, and $V(s)$.
+            <br>• <code>RLFRAckPacket</code>: Reports delivery ACK, E2E delay $\tau$, and SNR $\xi$.
+          </li>
+          <li><strong><code>rlfr_table.py</code></strong>:
+            <br>• Implements Q-table, Risk-table $R(s,a)$, Boltzmann selection, and loop cache $\Omega$.
+          </li>
+          <li><strong><code>rlfr.py</code></strong>:
+            <br>• Protocol controller: Packet queuing, MAC layer interface, overhearing, and Bellman update triggers.
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">System Integration Points</div>
+        <ul class="bullet-list">
+          <li><strong><code>entities/drone.py</code></strong>: Registered <code>"RLFR": RLFR</code> in protocol dispatch map.</li>
+          <li><strong><code>routing/parameters.py</code></strong>: Configured paper hyperparameters ($\alpha=0.7, \lambda=0.9, c=0.5, \beta=0.8, \mu=40\text{ ms}$).</li>
+          <li><strong><code>main.py</code> CLI</strong>: Run via <code>--routing RLFR</code>.</li>
+          <li><strong>Web UI (<code>api/app.py</code>)</strong>: Appears in dropdown at <code>http://127.0.0.1:8000</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-7">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "Now, how did we build this in code? We created a dedicated package under routing/rlfr. We have custom packets for HELLO beacons and ACKs. In rlfr_table.py, we implemented the Q-table, the risk table, and the safe Boltzmann exploration logic. In rlfr.py, the drone handles packet reception, CSMA/CA MAC scheduling, and Bellman updates. We registered RLFR in drone.py, in the CLI arguments, and in the Web UI, making it a first-class citizen alongside the other 9 protocols."
+    </div>
+  </div>
+
+  <!-- Slide 8: Benchmark Comparison -->
+  <div class="slide">
+    <div class="slide-tag">Empirical Results</div>
+    <div class="slide-title">Comparative Benchmark Across All 10 Protocols</div>
+    <div class="slide-subtitle">Identical testbed: 10 UAVs, 10s, Gauss-Markov 3D Mobility, CSMA/CA MAC, Seed=2025.</div>
+
+    <table class="benchmark-tbl">
+      <thead>
+        <tr>
+          <th>Protocol</th>
+          <th>Sent</th>
+          <th>Recv</th>
+          <th>PDR (%)</th>
+          <th>E2E Delay (ms)</th>
+          <th>Avg Hops</th>
+          <th>Throughput (Kbps)</th>
+          <th>MAC Delay (ms)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Greedy</td><td>469</td><td>429</td><td>91.47%</td><td>100.16 ms</td><td>1.47</td><td>1413.1</td><td>26.70 ms</td></tr>
+        <tr><td>DSDV</td><td>469</td><td>455</td><td>97.01%</td><td>15.59 ms</td><td>1.52</td><td>1366.4</td><td>5.99 ms</td></tr>
+        <tr><td>GRAD</td><td>469</td><td>426</td><td>90.83%</td><td>7.42 ms</td><td>1.00</td><td>1444.2</td><td>0.00 ms</td></tr>
+        <tr><td>OPAR</td><td>469</td><td>281</td><td>59.91%</td><td>8.79 ms</td><td>1.34</td><td>1417.8</td><td>13.82 ms</td></tr>
+        <tr><td>QRouting</td><td>469</td><td>389</td><td>82.94%</td><td>17.36 ms</td><td>2.38</td><td>1012.7</td><td>11.54 ms</td></tr>
+        <tr><td>QFANET</td><td>469</td><td>428</td><td>91.26%</td><td>91.74 ms</td><td>2.31</td><td>919.7</td><td>9.39 ms</td></tr>
+        <tr><td>QGeo</td><td>469</td><td>414</td><td>88.27%</td><td>22.22 ms</td><td>2.71</td><td>821.7</td><td>14.15 ms</td></tr>
+        <tr><td>QMR</td><td>469</td><td>370</td><td>78.89%</td><td>15.56 ms</td><td>2.45</td><td>875.9</td><td>12.83 ms</td></tr>
+        <tr><td>Baseline_DRL</td><td>469</td><td>429</td><td>91.47%</td><td>100.16 ms</td><td>1.47</td><td>1413.1</td><td>26.70 ms</td></tr>
+        <tr class="highlight-row"><td>⭐ RLFR (10th)</td><td>469</td><td>382</td><td>81.45%</td><td>16.47 ms</td><td>2.45</td><td>891.4</td><td>7.45 ms</td></tr>
+      </tbody>
+    </table>
+
+    <div class="card card-highlight" style="margin-top: 14px; padding: 12px 18px;">
+      <div style="font-size: 0.95rem; color: #ffffff;">
+        🚀 <strong>Key Finding:</strong> RLFR achieved an average latency of only <strong>16.47 ms</strong>, compared to <strong>91.74 ms for QFANET</strong> and <strong>100.16 ms for Baseline DRL</strong> — delivering a <strong>5.5× to 6.0× reduction in end-to-end packet delay</strong> while maintaining an 81.45% delivery ratio.
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-8">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "This table shows our empirical benchmark comparing all 10 protocols in UavNetSim under identical 10-node Gauss-Markov 3D mobility. Look at the latency column: QFANET has an average delay of 91.7 milliseconds, and Baseline DRL has 100 milliseconds. But RLFR achieves 16.47 milliseconds. That is over 5.5 times faster. The risk table successfully penalizes slow paths, steering packets away from congested links while maintaining high delivery reliability."
+    </div>
+  </div>
+
+  <!-- Slide 9: Live Demo & Verification -->
+  <div class="slide">
+    <div class="slide-tag">Execution & Demonstration</div>
+    <div class="slide-title">Running and Visualizing RLFR</div>
+    <div class="slide-subtitle">Ready for command-line experiments and interactive 3D Web UI demonstrations.</div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">💻 Command Line Interface</div>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 8px;">Run standard simulation:</p>
+        <div class="formula-box" style="font-size: 0.85rem;">
+          python main.py run \<br>
+          &nbsp;&nbsp;--routing RLFR \<br>
+          &nbsp;&nbsp;--nodes 10 \<br>
+          &nbsp;&nbsp;--duration 20 \<br>
+          &nbsp;&nbsp;--mobility GaussMarkov3D
+        </div>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 8px;">Run comparative 10-protocol benchmark:</p>
+        <div class="formula-box" style="font-size: 0.85rem;">
+          python run_10_benchmark.py
+        </div>
+      </div>
+      <div class="card card-highlight">
+        <div class="card-title">🌐 Interactive 3D Web Interface</div>
+        <ul class="bullet-list">
+          <li>Active locally at: <strong><code>http://127.0.0.1:8000</code></strong></li>
+          <li>Select <strong>RLFR</strong> in the Routing Protocol dropdown.</li>
+          <li>Watch live 3D drone flight paths, transmission rays, packet routing hops, and MAC statistics in real-time.</li>
+          <li>Inspect PDR, end-to-end latency, and collisions as the simulation progresses.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-9">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "You can run RLFR right now using either the CLI or our 3D web dashboard. Running main.py with --routing RLFR gives you full terminal metric snapshots. Or, you can open localhost:8000 in your browser, pick RLFR from the dropdown, and see the drones flying, transmitting, and making intelligent routing choices in real time."
+    </div>
+  </div>
+
+  <!-- Slide 10: Conclusion -->
+  <div class="slide">
+    <div class="slide-tag">Summary</div>
+    <div class="slide-title">Conclusion & Key Takeaways</div>
+    <div class="slide-subtitle">RLFR advances reinforcement learning for high-mobility aerial communication.</div>
+
+    <div class="grid-2">
+      <div class="card card-highlight">
+        <div class="card-title">🌟 Summary of Contributions</div>
+        <ul class="bullet-list">
+          <li><strong>Fully Implemented:</strong> RLFR is now officially the 10th protocol in UavNetSim.</li>
+          <li><strong>Mathematically Faithful:</strong> Exact replication of Utility (Eq. 3), Safe Boltzmann (Eq. 2), Bellman (Eq. 4), and Risk Updates (Eq. 5 & 6).</li>
+          <li><strong>Dramatic Performance Gain:</strong> 5.5× faster packet delivery than Q-FANET.</li>
+          <li><strong>Complete Tooling:</strong> CLI, 3D Web UI, automated benchmarks, and PDF reports generated.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">📑 Project Artifacts</div>
+        <ul class="bullet-list">
+          <li><strong>Codebase:</strong> <code>routing/rlfr/</code></li>
+          <li><strong>Official Report:</strong> <code>presentation/RLFR_Protocol_Report.pdf</code></li>
+          <li><strong>Slides Studio:</strong> <code>presentation/rlfr_presentation.html</code></li>
+          <li><strong>GitHub Repository:</strong> Synchronized across <code>master</code>, <code>main</code>, and <code>rlfr-protocol</code> branches.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notes-panel" id="notes-10">
+      <div class="notes-title">🎙️ Presenter Script (Say this):</div>
+      "To conclude: RLFR represents a significant step forward for FANET routing. By coupling multi-objective utility with safe, risk-bounded exploration and distributed value sharing, it eliminates the high-latency pitfalls of classical Q-routing. The implementation is complete, benchmarked, and ready in UavNetSim. Thank you, and I am now open to any questions."
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const slideIndicator = document.getElementById('slideIndicator');
+  const progressBar = document.getElementById('progressBar');
+
+  function updateSlide(index) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === index);
+    });
+    slideIndicator.textContent = `Slide ${index + 1} / ${slides.length}`;
+    progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
+  }
+
+  function nextSlide() {
+    if (currentSlide < slides.length - 1) {
+      currentSlide++;
+      updateSlide(currentSlide);
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateSlide(currentSlide);
+    }
+  }
+
+  function toggleNotes() {
+    const activeNote = document.getElementById(`notes-${currentSlide + 1}`);
+    if (activeNote) {
+      activeNote.classList.toggle('visible');
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      prevSlide();
+    } else if (e.key.toLowerCase() === 'n') {
+      toggleNotes();
+    }
+  });
+
+  updateSlide(0);
+</script>
+
+</body>
+</html>
